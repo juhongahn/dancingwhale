@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+x
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
+        <div class="container">
+            <a class="navbar-brand" href="#">가지가지한다</a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button class="w-100 btn btn-dark btn-lg" type="submit">
+                로그아웃
+            </button>
+        </form>
+    </nav>
+</body>
+</html>

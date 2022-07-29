@@ -1,12 +1,15 @@
 package com.k1ng.doinggajigaji.post;
 
-import lombok.Data;
+import com.k1ng.doinggajigaji.member.Member;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "post")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Post {
 
     @Id
@@ -16,5 +19,11 @@ public class Post {
     @Lob
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
+    public Post(String description) {
+        this.description = description;
+    }
 }
