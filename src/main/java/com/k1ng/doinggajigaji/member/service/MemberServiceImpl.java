@@ -7,6 +7,8 @@ import com.k1ng.doinggajigaji.member.dto.MemberFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
@@ -25,6 +27,12 @@ public class MemberServiceImpl implements MemberService{
         return memberRepository.existsByEmail(email);
     }
 
+    @Override
+    public Member findMemberByEmail(String email) {
+        
+        // 찾고 없을 땐 null을 반환.
+        return memberRepository.findMemberByEmail(email).orElse(null);
+    }
 
 
 }

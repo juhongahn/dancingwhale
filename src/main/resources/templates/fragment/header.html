@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-x
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
         <div class="container">
-            <a class="navbar-brand" href="#">가지가지한다</a>
+            <div>
+                <a class="navbar-brand" th:href="@{'/'}">가지가지한다</a>
+            </div>
+            <div class="d-flex justify-content-end align-items-center">
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="fas fa-pen-nib"></i></button>
+                <form th:action="@{/logout}" method="post">
+                    <button><i class="fas fa-sign-out-alt"></i></button>
+                </form>
+            </div>
         </div>
-        <form th:action="@{/logout}" method="post">
-            <button class="w-100 btn btn-dark btn-lg" type="submit">
-                로그아웃
-            </button>
-        </form>
+
+
     </nav>
 </body>
 </html>

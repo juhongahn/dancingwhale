@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>가지가지한다 :로그인</title>
 
-    <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/js/bootstrap.bundle.min.js}" href="../js/bootstrap.bundle.min.js">
+    <link th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}" href="../static/js/bootstrap.bundle.js"></script>
 
     <style>
 
@@ -49,7 +49,21 @@
             border-top-right-radius: 0;
         }
 
+        .form-signin button {
+            background-color:  #7952b3;
+            color: white;
+        }
 
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+            font-size: small;
+
+        }
+
+        a {
+            text-decoration: none;
+        }
 
     </style>
 </head>
@@ -57,32 +71,38 @@
 
 <main class="form-signin">
     <form th:object="${login}" th:action method="post">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <h1 class="h3 mb-3 fw-normal" th:text="#{logo}">가지가지한다</h1>
 
         <div class="form-floating">
-            <input type="email" class="form-control form-control-sm"
+            <input type="text" class="form-control form-control-sm"
                    th:field="*{email}"
-                   id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+                   id="floatingInput" placeholder="이메일 ">
+            <label for="floatingInput" th:text="#{member.email}">이메일</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control form-control-sm"
                    th:field="*{password}"
-                   id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+                   id="floatingPassword" placeholder="비밀번호">
+            <label for="floatingPassword" th:text="#{member.password}">비밀번호</label>
         </div>
 
         <div class="checkbox mb-3">
             <label>
-                <input type="checkbox" value="remember-me"> Remember me
+                <input type="checkbox" value="remember-me"> 로그인 상태 유지
             </label>
         </div>
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="err : ${#fields.globalErrors()}"
                th:text="${err}">글로벌 오류 메시지</p>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+        <button class="w-100 btn btn-lg" type="submit" th:text="#{member.signin.btn}">로그인</button>
+
+        <div class="d-flex justify-content-evenly mt-3">
+            <a class="text-muted" th:href="@{/member/new}" th:text="#{member.signup}">회원가입</a>
+            <a class="text-muted" href="#">아이디 찾기</a>
+            <a class="text-muted" href="#">비밀번호 찾기</a>
+        </div>
+        <p class="mt-4 mb-3 text-muted">&copy; 2017–2021</p>
     </form>
 </main>
 

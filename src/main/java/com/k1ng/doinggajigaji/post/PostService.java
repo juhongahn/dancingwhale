@@ -1,7 +1,8 @@
 package com.k1ng.doinggajigaji.post;
 
-import com.k1ng.doinggajigaji.member.Member;
+import java.util.List;
 
 public interface PostService {
-    Long post(PostFormDto postFormDto);
+    Long post(PostFormDto postFormDto, String email);
+    List<Post> findAllPost();
 }

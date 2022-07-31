@@ -14,13 +14,9 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     public Member login(LoginFormDto loginFormDto) {
-        Member foundMember = memberRepository.findMemberByEmail(loginFormDto.getEmail());
 
-        // 로그인 실패
-        if (!foundMember.getPassword().equals(loginFormDto.getPassword())) {
-            return null;
-        }
-        // 로그인 성공
-        return foundMember;
+        return memberRepository.findMemberByEmail(loginFormDto.getEmail())
+                .filter(m -> m.getPassword().equals(loginFormDto.getPassword()))
+                .orElse(null);
     }
 }

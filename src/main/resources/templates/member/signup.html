@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>가지가지한다 회원가입</title>
 
-    <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/js/bootstrap.bundle.min.js}" href="../js/bootstrap.bundle.min.js">
+    <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
 
     <style>
 
@@ -55,12 +55,12 @@
 <main class="form-signin">
     <form th:action th:object="${member}" method="post">
         <div style="height: 124px; width: 100%">
-            <h1 class="h3 mb-3 fw-normal text-center">가지가지한다</h1>
+            <h1 class="h3 mb-3 fw-normal text-center"  th:text="#{logo}">가지가지한다</h1>
         </div>
 
         <div class="mb-4">
             <div>
-                <label for="email">이메일</label>
+                <label for="email"  th:text="#{member.email}">이메일</label>
                 <input type="text" th:field="*{email}" class="form-control form-control-lg" id="email">
                 <div class="field-error" th:errors="*{email}">
                     이메일 오류
@@ -68,7 +68,7 @@
             </div>
 
             <div>
-                <label for="name">성명</label>
+                <label for="name" th:text="#{member.name}">성명</label>
                 <input type="text" th:field="*{name}" class="form-control form-control-lg" id="name">
                 <div class="field-error" th:errors="*{name}">
                     성명 오류
@@ -76,7 +76,7 @@
             </div>
 
             <div>
-                <label for="name">사용자 이름</label>
+                <label for="nickName" th:text="#{member.nickName}">사용자 이름</label>
                 <input type="text" th:field="*{nickName}" class="form-control form-control-lg" id="nickName">
                 <div class="field-error" th:errors="*{nickName}">
                     사용자 이름 오류
@@ -84,14 +84,14 @@
             </div>
 
             <div>
-                <label for="password">비밀번호</label>
+                <label for="password" th:text="#{member.password}">비밀번호</label>
                 <input type="password" th:field="*{password}" class="form-control form-control-lg" id="password">
                 <div class="field-error" th:errors="*{password}">
                     비밀번호 오류
                 </div>
             </div>
         </div>
-            <button class="w-100 btn btn-lg" type="submit">가입하기</button>
+            <button class="w-100 btn btn-lg" type="submit" th:text="#{member.signup.btn}">가입하기</button>
     </form>
 </main>
 
