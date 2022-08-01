@@ -1,6 +1,8 @@
 package com.k1ng.doinggajigaji;
 
 import com.k1ng.doinggajigaji.constance.SessionConst;
+import com.k1ng.doinggajigaji.likes.LikesService;
+import com.k1ng.doinggajigaji.login.LoginService;
 import com.k1ng.doinggajigaji.member.service.MemberService;
 import com.k1ng.doinggajigaji.post.Post;
 import com.k1ng.doinggajigaji.post.PostFormDto;
@@ -23,27 +25,21 @@ public class HomeController {
 
     private final PostService postService;
     private final MemberService memberService;
+    private final LikesService likesService;
 
     @GetMapping("/")
     public String homepage(@ModelAttribute("post") PostFormDto postFormDto, HttpServletRequest request, Model model) {
-
         HttpSession session = request.getSession(false);
         if (session == null) {
             return "redirect:/login";
         }
-
         String email = (String)session.getAttribute(SessionConst.LOGIN_MEMBER);
         log.info(email);
-
         //세션에 회원 데이터가 없으면 home
         if (!memberService.findDuplication(email)) {
             return "redirect:/login";
         }
-
-        List<Post> allPost = postService.findAllPost();
-        if (!allPost.isEmpty())
-            log.info(allPost.get(0).toString());
-
+        List<Post> allPost = postService.findAllByOrderByCreatedAtDesc();
         model.addAttribute("posts", allPost);
         return "index";
     }

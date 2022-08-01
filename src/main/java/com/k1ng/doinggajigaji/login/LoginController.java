@@ -1,4 +1,4 @@
-package com.k1ng.doinggajigaji.member.login;
+package com.k1ng.doinggajigaji.login;
 
 import com.k1ng.doinggajigaji.constance.SessionConst;
 import com.k1ng.doinggajigaji.member.Member;

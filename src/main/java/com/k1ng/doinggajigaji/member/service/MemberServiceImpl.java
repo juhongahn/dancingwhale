@@ -6,11 +6,11 @@ import com.k1ng.doinggajigaji.member.MemberRepository;
 import com.k1ng.doinggajigaji.member.dto.MemberFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;

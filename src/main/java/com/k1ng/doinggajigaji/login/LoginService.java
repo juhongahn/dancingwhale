@@ -1,4 +1,4 @@
-package com.k1ng.doinggajigaji.member.login;
+package com.k1ng.doinggajigaji.login;
 
 import com.k1ng.doinggajigaji.member.Member;
 import com.k1ng.doinggajigaji.member.MemberRepository;

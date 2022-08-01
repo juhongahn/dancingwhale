@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Slf4j
 @Controller
 @RequestMapping("/post")
@@ -19,16 +21,18 @@ public class PostController {
 
     private final PostService postService;
 
+    // 게시물 생성
     @PostMapping("/new")
-    public String posting(@Validated @ModelAttribute("post") PostFormDto postFormDto, BindingResult br,
-                          @Login String email) {
+    public void posting(@Validated @ModelAttribute("post") PostFormDto postFormDto, BindingResult br,
+                          @Login String email, HttpServletResponse response) {
 
         log.info(postFormDto.toString());
-        if (br.hasErrors()) {
-            return "/";
-        }
+//        if (br.hasErrors()) {
+//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//            return "index";
+//        }
         postService.post(postFormDto, email);
-        return "redirect:/";
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 

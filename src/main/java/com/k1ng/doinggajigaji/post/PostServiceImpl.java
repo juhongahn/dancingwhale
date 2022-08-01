@@ -4,11 +4,14 @@ import com.k1ng.doinggajigaji.member.Member;
 import com.k1ng.doinggajigaji.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
@@ -22,6 +25,8 @@ public class PostServiceImpl implements PostService{
         Post post = new Post();
         post.setDescription(postFormDto.getDescription());
         post.setMember(member);
+        post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
 
         Post savedPost = postRepository.save(post);
 
@@ -29,7 +34,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> findAllPost() {
-        return postRepository.findAll();
+    public List<Post> findAllByOrderByCreatedAtDesc() {
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
+
 }
