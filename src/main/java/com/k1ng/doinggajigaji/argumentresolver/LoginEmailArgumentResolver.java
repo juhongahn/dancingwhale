@@ -1,6 +1,6 @@
 package com.k1ng.doinggajigaji.argumentresolver;
 
-import com.k1ng.doinggajigaji.constance.SessionConst;
+import com.k1ng.doinggajigaji.constant.SessionConst;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

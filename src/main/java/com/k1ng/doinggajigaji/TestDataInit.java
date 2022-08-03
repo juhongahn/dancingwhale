@@ -1,7 +1,8 @@
 package com.k1ng.doinggajigaji;
 
-import com.k1ng.doinggajigaji.member.dto.MemberFormDto;
-import com.k1ng.doinggajigaji.member.service.MemberService;
+import com.k1ng.doinggajigaji.dto.MemberFormDto;
+import com.k1ng.doinggajigaji.entity.Member;
+import com.k1ng.doinggajigaji.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,8 @@ public class TestDataInit {
 
     @PostConstruct
     public void init() {
-        memberService.join(new MemberFormDto("안주홍", "12345678",
-                "lock5028@naver.com", "scarlet"));
+        memberService.join(Member.formToMember(new MemberFormDto("안주홍", "12345678",
+                "lock5028@naver.com", "scarlet")));
 
     }
 }

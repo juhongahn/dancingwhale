@@ -1,12 +1,11 @@
 package com.k1ng.doinggajigaji;
 
-import com.k1ng.doinggajigaji.constance.SessionConst;
-import com.k1ng.doinggajigaji.likes.LikesService;
-import com.k1ng.doinggajigaji.login.LoginService;
-import com.k1ng.doinggajigaji.member.service.MemberService;
-import com.k1ng.doinggajigaji.post.Post;
-import com.k1ng.doinggajigaji.post.PostFormDto;
-import com.k1ng.doinggajigaji.post.PostService;
+import com.k1ng.doinggajigaji.constant.SessionConst;
+import com.k1ng.doinggajigaji.service.LikesService;
+import com.k1ng.doinggajigaji.service.MemberService;
+import com.k1ng.doinggajigaji.entity.Post;
+import com.k1ng.doinggajigaji.dto.PostFormDto;
+import com.k1ng.doinggajigaji.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

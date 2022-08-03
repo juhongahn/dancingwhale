@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보 - 가지가지한다</title>
+
+    <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.css" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script src="https://kit.fontawesome.com/c2e67fd6d1.js" crossorigin="anonymous"></script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .form-signin label {
+            margin: 6px 6px;
+        }
+
+        .form-signin button {
+            background-color:  #7952b3;
+            color: white;
+        }
+
+        .navbar .container{
+            max-width: 600px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div th:replace ="~{fragment/header :: header}"></div>
+<main class="form-signin d-flex justify-content-center mt-5">
+    <div th:object="${profile}">
+        <div class="card" style="width: 25rem;">
+            <div class="card-body">
+                <h5 class="card-title mb-3">내 정보</h5>
+                <p class="card-text fw-bold mb-1" th:text="${profile.email}"></p>
+                <div>
+                    <small class="card-text text-muted" th:text="|${profile.name} / |"></small>
+                    <small class="card-text text-muted" th:text="${profile.nickName}"></small>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-action" th:href="@{/member/{memberId}/edit(memberId=${profile.id})}">
+                    프로필 수정
+                </a>
+                <a class="list-group-item list-group-item-action" th:href="@{/member/{memberId}/password/edit(memberId=${profile.id})}">
+                    비밀번호 변경
+                </a>
+                <li class="list-group-item">회원탈퇴</li>
+            </ul>
+        </div>
+    </div>
+</main>
+</body>
+</html>

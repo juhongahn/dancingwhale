@@ -1,6 +1,6 @@
 package com.k1ng.doinggajigaji.interceptor;
 
-import com.k1ng.doinggajigaji.constance.SessionConst;
+import com.k1ng.doinggajigaji.constant.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
