@@ -17,7 +17,7 @@ public class MemberFormDto {
     private String name;
 
     @NotBlank
-    @Size(min = 8, max = 16)
+    @Size(min = 8, max = 16, message = "8자에서 16자 사이로 입력해 주세요.")
     private String password;
 
     @Email

@@ -1,11 +1,12 @@
 package com.k1ng.doinggajigaji.entity;
 
+import com.k1ng.doinggajigaji.constant.Role;
 import com.k1ng.doinggajigaji.dto.MemberFormDto;
 import com.k1ng.doinggajigaji.dto.PasswordChangeDto;
-import com.k1ng.doinggajigaji.dto.ProfileDto;
 import com.k1ng.doinggajigaji.dto.ProfileEditDto;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,15 +38,21 @@ public class Member {
 
     private String status;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Post> postList = new ArrayList<>();
 
-    public static Member formToMember(MemberFormDto memberFormDto) {
+    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
         Member member = new Member();
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
         member.setNickName(memberFormDto.getNickName());
-        member.setPassword(memberFormDto.getPassword());
+        String password = passwordEncoder.encode(memberFormDto.getPassword());
+        member.setPassword(password);
+        member.setRole(Role.USER);
+
         member.setRegTime(LocalDateTime.now());
         member.setUpdateTime(LocalDateTime.now());
         member.setStatus("active");

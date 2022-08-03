@@ -28,16 +28,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String homepage(@ModelAttribute("post") PostFormDto postFormDto, HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "redirect:/login";
-        }
-        String email = (String)session.getAttribute(SessionConst.LOGIN_MEMBER);
-        log.info(email);
-        //세션에 회원 데이터가 없으면 home
-        if (!memberService.findDuplication(email)) {
-            return "redirect:/login";
-        }
+
         List<Post> allPost = postService.findAllByOrderByCreatedAtDesc();
         model.addAttribute("posts", allPost);
         return "index";

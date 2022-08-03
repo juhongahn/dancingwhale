@@ -6,6 +6,10 @@ import com.k1ng.doinggajigaji.dto.ProfileEditDto;
 import com.k1ng.doinggajigaji.entity.Member;
 import com.k1ng.doinggajigaji.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +18,14 @@ import javax.persistence.EntityNotFoundException;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     private final MemberRepository memberRepository;
 
     @Override
     public Member join(Member member) {
-        validateDuplicateMember(member);
+        // 컨트롤러에서 이미 검증함.
+        // validateDuplicateMember(member);
         return memberRepository.save(member);
     }
 
@@ -72,4 +77,19 @@ public class MemberServiceImpl implements MemberService{
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        Member member = memberRepository.findByEmail(email);
+
+        if (member == null) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole().toString())
+                .build();
+    }
 }

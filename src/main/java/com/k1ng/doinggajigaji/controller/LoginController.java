@@ -32,35 +32,43 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String login(@ModelAttribute("login") LoginFormDto loginFormDto, BindingResult br,
-                         HttpServletRequest request, Model model){
-        if (br.hasErrors()) {
-            log.info(br.getAllErrors().toString());
-            return "login";
-        }
-        Member loginMember = loginService.login(loginFormDto);
-        if (loginMember == null) {
-            br.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "login";
-        }
-
-        // 로그인 성공 로직
-        //세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
-        HttpSession session = request.getSession();
-        //세션에 로그인 회원 정보 보관
-        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.getEmail());
-        return "redirect:/";
+    @GetMapping("/login/error")
+    public String loginError(Model model) {
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
+        return "login";
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request) {
 
-        //세션을 삭제한다.
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return "redirect:/login";
-    }
+//    스프링 시큐리티를 쓰면서 사용 x
+//    @PostMapping("/login")
+//    public String login(@ModelAttribute("login") LoginFormDto loginFormDto, BindingResult br,
+//                         HttpServletRequest request, Model model){
+//        if (br.hasErrors()) {
+//            log.info(br.getAllErrors().toString());
+//            return "login";
+//        }
+//        Member loginMember = loginService.login(loginFormDto);
+//        if (loginMember == null) {
+//            br.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+//            return "login";
+//        }
+//
+//        // 로그인 성공 로직
+//        //세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성
+//        HttpSession session = request.getSession();
+//        //세션에 로그인 회원 정보 보관
+//        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.getEmail());
+//        return "redirect:/";
+//    }
+
+//    @PostMapping("/logout")
+//    public String logout(HttpServletRequest request) {
+//
+//        //세션을 삭제한다.
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            session.invalidate();
+//        }
+//        return "redirect:/login";
+//    }
 }

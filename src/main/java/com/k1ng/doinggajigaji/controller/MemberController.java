@@ -9,6 +9,7 @@ import com.k1ng.doinggajigaji.entity.Member;
 import com.k1ng.doinggajigaji.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +25,7 @@ import javax.persistence.EntityNotFoundException;
 public class MemberController {
 
     private final MemberService memberService;
-
+    private final PasswordEncoder passwordEncoder;
     // 회원가입
     @GetMapping(value = "/new")
     public String memberForm(Model model){
@@ -35,21 +36,17 @@ public class MemberController {
     @PostMapping("/new")
     public String join(@Validated @ModelAttribute("member") MemberFormDto memberFormDto,
                        BindingResult bindingResult, Model model) {
-        /**
-         * TODO 한 가지만 검증오류 출력하기.
-          */
+        if (memberService.findDuplication(memberFormDto.getEmail())){
+            bindingResult.rejectValue("email", "duplicated.email");
+            return "member/signup";
+        }
 
         if (bindingResult.hasErrors()) {
             return "member/signup";
         }
 
-        try {
-            Member member = Member.formToMember(memberFormDto);
-            memberService.join(member);
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "member/memberForm";
-        }
+        Member member = Member.createMember(memberFormDto, passwordEncoder);
+        memberService.join(member);
         return "redirect:/";
     }
 

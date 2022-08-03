@@ -29,7 +29,6 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    @Column(nullable = false)
     private Member member;
 
     @CreatedDate

@@ -70,18 +70,17 @@
 <body class="text-center">
 
 <main class="form-signin">
-    <form th:object="${login}" th:action method="post">
+    <form method="post" th:action="@{/login}">
         <h1 class="h3 mb-3 fw-normal" th:text="#{logo}">가지가지한다</h1>
 
         <div class="form-floating">
-            <input type="text" class="form-control form-control-sm"
-                   th:field="*{email}"
-                   id="floatingInput" placeholder="이메일 ">
+            <input type="text" class="form-control form-control-sm" name="email"
+                   id="floatingInput" placeholder="이메일" th:value="${session.email}">
             <label for="floatingInput" th:text="#{member.email}">이메일</label>
         </div>
+
         <div class="form-floating">
-            <input type="password" class="form-control form-control-sm"
-                   th:field="*{password}"
+            <input type="password" class="form-control form-control-sm" name="password"
                    id="floatingPassword" placeholder="비밀번호">
             <label for="floatingPassword" th:text="#{member.password}">비밀번호</label>
         </div>
@@ -91,9 +90,8 @@
                 <input type="checkbox" value="remember-me"> 로그인 상태 유지
             </label>
         </div>
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-               th:text="${err}">글로벌 오류 메시지</p>
+        <div th:if="${session.errorMsg}">
+            <p class="field-error" th:text="${session.errorMsg}">에러</p>
         </div>
         <button class="w-100 btn btn-lg" type="submit" th:text="#{member.signin.btn}">로그인</button>
 
