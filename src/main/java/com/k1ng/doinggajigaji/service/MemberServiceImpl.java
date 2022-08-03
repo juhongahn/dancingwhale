@@ -70,6 +70,13 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         return foundMember.getPassword().equals(currentPassword);
     }
 
+    @Override
+    public Long deleteMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        memberRepository.delete(member);
+        return member.getId();
+    }
+
     private void validateDuplicateMember(Member member){
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if(findMember != null){

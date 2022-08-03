@@ -12,4 +12,5 @@ public interface MemberService {
     Long updateProfile(Long memberId, ProfileEditDto profileEditDto);
     Long updatePassword(Long memberId, PasswordChangeDto passwordChangeDto);
     boolean checkPassword(Long memberId, String currentPassword);
+    Long deleteMember(Long memberId);
 }

@@ -22,10 +22,6 @@ public class PostFormDto {
     @NotBlank
     private String description;
 
-    @NotBlank
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;
-
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Post createPost(){

@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Post {
+public class Post extends BaseEntity{
 
     @Id
     @Column(name = "post_id")
@@ -27,18 +27,12 @@ public class Post {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    // 글이 삭제되면 좋아요도 다 날아가야지
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Likes> likesList = new ArrayList<>();
 
 

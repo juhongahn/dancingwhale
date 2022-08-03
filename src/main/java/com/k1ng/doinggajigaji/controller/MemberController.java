@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
 
 @Slf4j
 @Controller
@@ -52,8 +53,9 @@ public class MemberController {
 
     // 프로필 페이지
     @GetMapping("/profile")
-    public String profileForm(@Login String email, Model model) {
-        Member member = memberService.findMemberByEmail(email);
+    public String profileForm(Principal principal, Model model) {
+        log.info("email={}", principal.getName());
+        Member member = memberService.findMemberByEmail(principal.getName());
         model.addAttribute("profile", ProfileDto.of(member));
         return "member/profile";
     }
@@ -130,6 +132,13 @@ public class MemberController {
             return "member/profile";
         }
         return "redirect:/member/profile";
+    }
+
+    @GetMapping("/{memberId}/delete")
+    public String deleteMember(@PathVariable Long memberId) {
+
+        memberService.deleteMember(memberId);
+        return "login";
     }
 
 }

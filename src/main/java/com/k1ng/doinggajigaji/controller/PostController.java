@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Slf4j
 @Controller
 @RequestMapping("/post")
@@ -19,23 +21,25 @@ public class PostController {
 
     private final PostService postService;
 
-    // 게시물 생성
-    @GetMapping("/new")
-    public String postForm(Model model) {
-        PostFormDto postFormDto = new PostFormDto();
-        model.addAttribute("post", postFormDto);
-        return null;
-    }
+//    // 게시물 생성
+//    @GetMapping("/new")
+//    public String postForm(Model model) {
+//        PostFormDto postFormDto = new PostFormDto();
+//        model.addAttribute("post", postFormDto);
+//        return null;
+//    }
 
     @PostMapping("/new")
     public String posting(@Validated @ModelAttribute("post") PostFormDto postFormDto, BindingResult br,
-                        @Login String email, Model model) {
+                          Principal principal, Model model) {
+
+        log.info("email={}", principal.getName());
 
         if (br.hasErrors()) {
             return "index";
         }
         try {
-            postService.savePost(postFormDto, email);
+            postService.savePost(postFormDto, principal.getName());
         } catch (Exception e) {
             model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
             return "index";

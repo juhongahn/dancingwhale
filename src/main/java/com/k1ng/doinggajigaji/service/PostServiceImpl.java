@@ -1,5 +1,6 @@
 package com.k1ng.doinggajigaji.service;
 
+import com.k1ng.doinggajigaji.dto.CardFormDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.entity.Member;
 import com.k1ng.doinggajigaji.entity.Post;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +28,6 @@ public class PostServiceImpl implements PostService{
 
         // 게시물 등록
         Post post = postFormDto.createPost();
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
         Member member = memberRepository.findMemberByEmail(email)
                 .orElseThrow(EntityNotFoundException::new);
         post.setMember(member);
@@ -38,8 +38,10 @@ public class PostServiceImpl implements PostService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<Post> findAllByOrderByCreatedAtDesc() {
-        return postRepository.findAllByOrderByCreatedAtDesc();
+    public List<CardFormDto> getAllCardForm() {
+
+        return postRepository.findAllByOrderByRegTimeDesc().stream()
+                .map((post)-> new CardFormDto().createCardForm(post)).collect(Collectors.toList());
     }
 
 
@@ -56,8 +58,8 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(postFormDto.getId())
                 .orElseThrow(EntityNotFoundException::new);
         post.update(postFormDto);
-        post.setUpdatedAt(LocalDateTime.now());
         return post.getId();
     }
+
 
 }

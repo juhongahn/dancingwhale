@@ -30,7 +30,6 @@ public class LikesServiceImpl implements LikesService {
         Likes likes = new Likes();
         likes.setMember(member);
         likes.setPost(post);
-        likes.setCreatedAt(LocalDateTime.now());
 
         Likes save = likesRepository.save(likes);
         return save.getId();
@@ -38,8 +37,6 @@ public class LikesServiceImpl implements LikesService {
 
     @Override
     public boolean checkDuplicatedLikes(String userEmail, Long postId) {
-
-
         return false;
     }
 

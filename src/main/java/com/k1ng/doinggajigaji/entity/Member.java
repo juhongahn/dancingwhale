@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "member")
 @Getter
 @Setter
-public class Member {
+public class Member extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,16 +32,13 @@ public class Member {
 
     private String password;
 
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
-
     private String status;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    // 회원이 삭제되면 글도 모두 삭제됨.
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> postList = new ArrayList<>();
 
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
@@ -52,9 +49,6 @@ public class Member {
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setRole(Role.USER);
-
-        member.setRegTime(LocalDateTime.now());
-        member.setUpdateTime(LocalDateTime.now());
         member.setStatus("active");
         return member;
     }

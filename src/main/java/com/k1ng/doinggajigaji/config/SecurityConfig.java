@@ -1,6 +1,5 @@
 package com.k1ng.doinggajigaji.config;
 
-import com.k1ng.doinggajigaji.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -31,10 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .usernameParameter("email")
-                //.failureUrl("/login/error")
                 .failureHandler((request , response, exception)-> {
                     String email = request.getParameter("email");
                     log.info("email={}", email);
+
                     HttpSession session = request.getSession();
                     session.setAttribute("email", email);
                     session.setAttribute("errorMsg", "아이디 또는 비밀번호가 맞지 않습니다.");
@@ -44,11 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login");
-        
+
+        http.csrf().disable();
 
         http.authorizeRequests()
-                .mvcMatchers("/login/**", "/member/new", "/logout").permitAll()
-                .mvcMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/login/**", "/member/new", "/logout").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.exceptionHandling()
@@ -57,7 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/h2-console/**",
+                "/favicon.ico", "/error");
     }
 
     @Bean

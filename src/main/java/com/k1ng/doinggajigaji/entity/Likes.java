@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Likes {
+public class Likes extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,10 +27,6 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
-
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
 
     public Likes(Member member, Post post) {
         this.member = member;
