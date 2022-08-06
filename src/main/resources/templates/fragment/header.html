@@ -7,15 +7,13 @@
             <div>
                 <a class="navbar-brand" th:href="@{'/'}">가지가지한다</a>
             </div>
-            <div class="d-flex justify-content-end align-items-center">
-
+            <div class="">
                 <a data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="new">
                     <i class="fas fa-pen-nib"></i>
                 </a>
                 <a th:href="@{/logout}" sec:authorize="isAuthenticated()">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
-
                 <a th:href="@{/member/profile}"><i class="fas fa-user"></i></a>
             </div>
         </div>

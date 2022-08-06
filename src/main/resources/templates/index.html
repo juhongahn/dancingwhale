@@ -95,7 +95,7 @@
                         <i class="far fa-thumbs-down"></i>
                     </span>
                 </div>
-                <span class="card-text" th:text="|좋아요 ${card.likesCnt}|"></span>
+                <small class="card-text fw-bold" th:text="|좋아요 ${card.likesCnt}|"></small>
                 <p class="card-text" th:text="${card.description}">Some quick example text.</p>
             </div>
             <form action="#" >
@@ -109,7 +109,9 @@
 </body>
 
 
-<script >
+<script th:inlne="javascript">
+
+
 
     <!-- 모달 -->
     var exampleModal  = document.getElementById('exampleModal');
@@ -147,9 +149,10 @@
                 'postId': postId
             })
         })
-            .then(res => {
+            .then(res => res.json())
+            .then(data => {
+                alert(data)
                 window.location.reload();
-                alert("등록됐습니다.");
             })
 
     }

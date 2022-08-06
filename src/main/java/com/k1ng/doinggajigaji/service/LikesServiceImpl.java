@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 
 @Service
@@ -37,7 +38,10 @@ public class LikesServiceImpl implements LikesService {
 
     @Override
     public boolean checkDuplicatedLikes(String userEmail, Long postId) {
-        return false;
+
+        Post post = postRepository.findById(postId).orElseThrow(EntityNotFoundException::new);
+        // 중복되면 true, 아니면 false
+        return post.getLikesList().stream().anyMatch(likes -> likes.getMember().getEmail().equals(userEmail));
     }
 
 
