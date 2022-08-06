@@ -40,7 +40,8 @@ public class Post extends BaseEntity{
         this.description = description;
     }
 
-    public void update(PostFormDto postFormDto) {
+
+    public void updatePost(PostFormDto postFormDto) {
         this.description = postFormDto.getDescription();
     }
 }

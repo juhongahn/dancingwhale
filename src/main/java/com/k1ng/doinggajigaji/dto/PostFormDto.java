@@ -9,7 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +22,10 @@ public class PostFormDto {
 
     @NotBlank
     private String description;
+
+    private List<PostImgDto> postImgDtoList = new ArrayList<>();
+
+    private List<Long> postImgIds = new ArrayList<>();
 
     private static ModelMapper modelMapper = new ModelMapper();
 

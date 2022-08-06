@@ -4,27 +4,30 @@
      data-bs-backdrop="static" data-bs-keyboard="false"
      tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" th:fragment="modal">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" >
             <div class="modal-header">
-                <h6 class="modal-title" id="exampleModalLabel" th:text="#{post.post.message}">새 게시물 만들기</h6>
+                <h6 class="modal-title" id="exampleModalLabel">타이틀</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/post/new}" th:object="${post}" method="post">
-                    <input type="hidden" name="postId" th:value="${post.id}">
+                <form th:action="@{/post/new}" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label" th:text="#{post.post.content}">내용</label>
-                        <textarea th:field="*{description}" rows="6" cols="60"
-                                  class="form-control" name="description" id="message-text"></textarea>
-                        <div class="field-error" th:errors="*{description}">
-                            내용 오류
-                        </div>
+                        <textarea type="text" rows="6" cols="60" class="form-control" name="description" id="message-text"></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">사진 선택</label>
+                        <input class="form-control" type="file" name="itemImgFiles" accept="image/*" id="formFileMultiple" multiple>
+                    </div>
+                    <ul id="imgPreview" class="sortable d-flex justify-content-start ms-0">
+                    </ul>
                     <div class="d-flex justify-content-end" >
-                        <button type="button" class="btn confirmBtn me-1" th:text="#{confirm}" id="postSubmitBtn">확인</button>
+                        <button type="submit" class="btn confirmBtn me-1" th:text="#{confirm}" id="postSubmitBtn">확인</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">취소</button>
                     </div>
                 </form>
+
+
             </div>
         </div>
     </div>

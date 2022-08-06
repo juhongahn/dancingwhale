@@ -2,13 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-5" th:fragment="header">
         <div class="container">
             <div>
                 <a class="navbar-brand" th:href="@{'/'}">가지가지한다</a>
             </div>
             <div class="d-flex justify-content-end align-items-center">
-                <button data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="fas fa-pen-nib"></i></button>
+
+                <a data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="new">
+                    <i class="fas fa-pen-nib"></i>
+                </a>
                 <a th:href="@{/logout}" sec:authorize="isAuthenticated()">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
