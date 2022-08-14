@@ -72,11 +72,6 @@
     </div>
 </body>
 <script>
-    $(window).on("load", function () {
-        $('.card-text').val().replace(/\n/g, "<br>");
-    });
-
-
     $('.visual').slick();
 
     function formEmptyCheck(){
@@ -97,6 +92,7 @@
             .then((data) => {
                     console.log(data);
                     $('#message-text').val(data.description);
+                    $("input:checkbox[id='onlyMe']").prop("checked", data.onlyMe);
                     if (data.postImgDtoList.length !== 0) {
                         data.postImgDtoList.forEach(function (postImgDto) {
                             // div에 이미지추가.

@@ -27,6 +27,8 @@ public class PostFormDto {
 
     private List<Long> postImgIds = new ArrayList<>();
 
+    private boolean onlyMe;
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Post createPost(){

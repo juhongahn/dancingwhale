@@ -30,6 +30,7 @@ $(window).on("load", function () {
         $('#message-text').val('');
         $('#imgPreview').empty();
         $('#formFileMultiple').val(null);
+        $("input:checkbox[id='onlyMe']").prop("checked", false);
     });
 
     const fileInput = document.getElementById('formFileMultiple');

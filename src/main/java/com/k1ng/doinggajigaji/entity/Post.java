@@ -1,12 +1,12 @@
 package com.k1ng.doinggajigaji.entity;
 
 import com.k1ng.doinggajigaji.dto.PostFormDto;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +33,16 @@ public class Post extends BaseEntity{
 
     // 글이 삭제되면 좋아요도 다 날아가야지
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Likes> likesList = new ArrayList<>();
-
+    private List<Likes> likesList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PostImg> postImgList = new ArrayList<>();
+    private List<PostImg> postImgList = new ArrayList<>();
+
+    private boolean onlyMe;
 
     public Post(String description) {
         this.description = description;
     }
-
 
     public void updatePost(PostFormDto postFormDto) {
         this.description = postFormDto.getDescription();

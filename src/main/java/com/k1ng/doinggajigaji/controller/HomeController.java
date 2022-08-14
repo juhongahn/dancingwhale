@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -23,14 +24,12 @@ public class HomeController {
     private final PostService postService;
 
     @GetMapping("/")
-    public String homepage(@ModelAttribute("post") PostFormDto postFormDto, Model model) {
+    public String homepage(@ModelAttribute("post") PostFormDto postFormDto, Model model, Principal principal) {
 
         // 필요한것들 1. 작성자 2. 사진 3. 좋아요 갯수 4. 글
         // 작성자, 사진, 글은 post 엔티티에서 가져올 수 있다.
 
-        List<CardFormDto> allCard = postService.getAllCardForm();
-        if (!allCard.isEmpty())
-            log.info("description={}", allCard.get(0).getDescription()) ;
+        List<CardFormDto> allCard = postService.getAllCardForm(principal.getName());
 
         val nlString = System.getProperty("line.separator").toString();
         model.addAttribute("nlString", nlString);

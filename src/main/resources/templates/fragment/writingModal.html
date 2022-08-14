@@ -12,7 +12,14 @@
             <div class="modal-body">
                 <form th:action="@{/post/new}" method="post" enctype="multipart/form-data" id="modal-form">
                     <div class="mb-3">
-                        <label for="message-text" class="col-form-label" th:text="#{post.post.content}">내용</label>
+                        <div class="d-flex justify-content-between">
+                            <label for="message-text" class="col-form-label" th:text="#{post.post.content}">내용</label>
+                            <div class="checkbox">
+                                <label>
+                                    나만 보기 <input type="checkbox" name="onlyMe" id="onlyMe">
+                                </label>
+                            </div>
+                        </div>
                         <textarea type="text" rows="6" cols="60" class="form-control"
                                   name="description" id="message-text" wrap="hard"></textarea>
                     </div>

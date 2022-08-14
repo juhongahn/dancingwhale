@@ -1,7 +1,5 @@
 package com.k1ng.doinggajigaji.controller;
 
-import com.k1ng.doinggajigaji.argumentresolver.Login;
-import com.k1ng.doinggajigaji.dto.PostEditFormDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,7 @@ public class PostController {
     public String posting(@Validated @ModelAttribute("post") PostFormDto postFormDto, BindingResult br,
                           Principal principal, Model model,
                           @RequestParam("itemImgFiles") List<MultipartFile> itemImgFileList) {
-        log.info("PostFormDtd={}", postFormDto);
+        log.info("PostFormDtd={}", postFormDto.toString());
 
         if (br.hasErrors()) {
             return "index";
@@ -41,7 +39,7 @@ public class PostController {
         try {
             postService.savePost(postFormDto, principal.getName(), itemImgFileList);
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
+            model.addAttribute("errorMessage", "글 등록 중 에러가 발생하였습니다.");
             return "index";
         }
         return "redirect:/";
@@ -74,7 +72,6 @@ public class PostController {
             model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
             return "index";
         }
-
         return "redirect:/";
     }
 

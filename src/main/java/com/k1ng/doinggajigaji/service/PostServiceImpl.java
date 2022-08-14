@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
@@ -35,20 +34,17 @@ public class PostServiceImpl implements PostService{
     private final PostImgRepository postImgRepository;
 
     @Override
-    public Long savePost(PostFormDto postFormDto, String email, List<MultipartFile> itemImgFileList)
-            throws Exception {
+    public Long savePost(PostFormDto postFormDto, String email, List<MultipartFile> itemImgFileList) throws Exception {
 
         // 게시물 등록
         Post post = postFormDto.createPost();
-        Member member = memberRepository.findMemberByEmail(email)
-                .orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(EntityNotFoundException::new);
         post.setMember(member);
         postRepository.save(post);
 
         log.info(String.valueOf(itemImgFileList.size()));
 
         if (!Objects.equals(itemImgFileList.get(0).getOriginalFilename(), "")) {
-            log.info("값 있음!");
             for (MultipartFile multipartFile : itemImgFileList) {
                 PostImg postImg = new PostImg();
                 postImg.setPost(post);
@@ -68,8 +64,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public Long updatePost(PostFormDto postFormDto, List<MultipartFile> postImgFileList) throws IOException {
 
-        Post post = postRepository.findById(postFormDto.getId())
-                .orElseThrow(EntityNotFoundException::new);
+        Post post = postRepository.findById(postFormDto.getId()).orElseThrow(EntityNotFoundException::new);
         post.updatePost(postFormDto);
 
         List<Long> postImgIds = postFormDto.getPostImgIds();
@@ -85,8 +80,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostFormDto getPostDtl(Long postId) {
 
-        List<PostImg> postImgList =
-                postImgRepository.findByPostIdOrderByIdAsc(postId);
+        List<PostImg> postImgList = postImgRepository.findByPostIdOrderByIdAsc(postId);
 
         List<PostImgDto> postImgDtoList = new ArrayList<>();
         // entity => dto
@@ -109,18 +103,16 @@ public class PostServiceImpl implements PostService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<CardFormDto> getAllCardForm() {
+    public List<CardFormDto> getAllCardForm(String email) {
 
-        List<PostImg> postImgList =
-                postImgRepository.findAllByOrderByIdAsc();
+        List<PostImg> postImgList = postImgRepository.findAllByOrderByIdAsc();
 
-        List<PostImgDto> postImgDtoList = new ArrayList<>();
+        Member byEmail = memberRepository.findByEmail(email);
 
-        List<CardFormDto> cardFormDtoList = postRepository.findAllByOrderByRegTimeDesc().stream()
-                .map(CardFormDto::of).collect(Collectors.toList());
+        List<CardFormDto> cardFormDtoList = postRepository.findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(byEmail)
+                .stream().map(CardFormDto::of).collect(Collectors.toList());
 
         for (CardFormDto cardFormDto : cardFormDtoList) {
-
             for (PostImg postImg : postImgList) {
                 if (cardFormDto.getPostId().equals(postImg.getPost().getId())) {
                     cardFormDto.getPostImgDtoList().add(PostImgDto.of(postImg));
