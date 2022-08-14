@@ -10,6 +10,7 @@ import com.k1ng.doinggajigaji.repository.MemberRepository;
 import com.k1ng.doinggajigaji.repository.PostImgRepository;
 import com.k1ng.doinggajigaji.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,11 +20,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
@@ -42,12 +45,16 @@ public class PostServiceImpl implements PostService{
         post.setMember(member);
         postRepository.save(post);
 
-        for (MultipartFile multipartFile : itemImgFileList) {
-            PostImg postImg = new PostImg();
-            postImg.setPost(post);
-            postImgService.savePostImg(postImg, multipartFile);
-        }
+        log.info(String.valueOf(itemImgFileList.size()));
 
+        if (!Objects.equals(itemImgFileList.get(0).getOriginalFilename(), "")) {
+            log.info("값 있음!");
+            for (MultipartFile multipartFile : itemImgFileList) {
+                PostImg postImg = new PostImg();
+                postImg.setPost(post);
+                postImgService.savePostImg(postImg, multipartFile);
+            }
+        }
         return post.getId();
     }
 
@@ -80,17 +87,23 @@ public class PostServiceImpl implements PostService{
 
         List<PostImg> postImgList =
                 postImgRepository.findByPostIdOrderByIdAsc(postId);
-        List<PostImgDto> postImgDtoList = new ArrayList<>();
 
+        List<PostImgDto> postImgDtoList = new ArrayList<>();
         // entity => dto
         for (PostImg postImg : postImgList) {
             PostImgDto postImgDto = PostImgDto.of(postImg);
             postImgDtoList.add(postImgDto);
         }
+
         Post post = postRepository.findById(postId).orElseThrow(EntityNotFoundException::new);
         PostFormDto postFormDto = PostFormDto.of(post);
         postFormDto.setPostImgDtoList(postImgDtoList);
         return postFormDto;
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+        postRepository.delete(postRepository.findById(postId).orElseThrow(EntityNotFoundException::new));
     }
 
 
@@ -100,6 +113,7 @@ public class PostServiceImpl implements PostService{
 
         List<PostImg> postImgList =
                 postImgRepository.findAllByOrderByIdAsc();
+
         List<PostImgDto> postImgDtoList = new ArrayList<>();
 
         List<CardFormDto> cardFormDtoList = postRepository.findAllByOrderByRegTimeDesc().stream()

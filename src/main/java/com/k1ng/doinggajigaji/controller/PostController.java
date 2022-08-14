@@ -33,9 +33,7 @@ public class PostController {
     public String posting(@Validated @ModelAttribute("post") PostFormDto postFormDto, BindingResult br,
                           Principal principal, Model model,
                           @RequestParam("itemImgFiles") List<MultipartFile> itemImgFileList) {
-
         log.info("PostFormDtd={}", postFormDto);
-        log.info("itemImgFileList={}", itemImgFileList);
 
         if (br.hasErrors()) {
             return "index";
@@ -50,7 +48,6 @@ public class PostController {
     }
 
     // 게시물 수정
-
     @ResponseBody
     @GetMapping("/{postId}/edit")
     public ResponseEntity<PostFormDto> postUpdateForm(@PathVariable Long postId, Model model) {
@@ -62,6 +59,7 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @PostMapping("/{postId}/edit")
     public String postUpdate(@Validated PostFormDto postFormDto, BindingResult br,
@@ -80,8 +78,9 @@ public class PostController {
         return "redirect:/";
     }
 
-
-
-
-
+    @GetMapping("/{postId}/delete")
+    public String  deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return "redirect:/";
+    }
 }

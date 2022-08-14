@@ -1,6 +1,5 @@
 package com.k1ng.doinggajigaji.controller;
 
-import com.k1ng.doinggajigaji.argumentresolver.Login;
 import com.k1ng.doinggajigaji.dto.MemberFormDto;
 import com.k1ng.doinggajigaji.dto.PasswordChangeDto;
 import com.k1ng.doinggajigaji.dto.ProfileDto;
@@ -27,6 +26,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
+
     // 회원가입
     @GetMapping(value = "/new")
     public String memberForm(Model model){
@@ -78,14 +78,18 @@ public class MemberController {
     @PostMapping("/{memberId}/edit")
     public String editProfile(@Validated @ModelAttribute("profile") ProfileEditDto profileEditDto,
                        BindingResult br, Model model, @PathVariable Long memberId) {
+
         log.info("ProfileEditDto {}", profileEditDto);
 
         if (br.hasErrors()) {
             return "member/editForm";
         }
 
-        if (!memberService.checkPassword(memberId, profileEditDto.getPassword())) {
-            br.reject("passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
+        String rawPassword = profileEditDto.getPassword();
+        String encodedPassword = memberService.findMemberById(memberId).getPassword();
+
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            br.rejectValue("password","passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
             return "member/editForm";
         }
         try {
@@ -101,12 +105,13 @@ public class MemberController {
     @GetMapping("/{memberId}/password/edit")
     public String passwordEditForm(@PathVariable Long memberId, Model model) {
 
-        model.addAttribute("passwordEditDto", new PasswordChangeDto());
+        model.addAttribute("passwordChangeDto", new PasswordChangeDto());
+
         return "member/passwordEditForm";
     }
 
     @PostMapping("/{memberId}/password/edit")
-    public String editProfile(@Validated @ModelAttribute("profile") PasswordChangeDto passwordChangeDto,
+    public String editProfile(@Validated @ModelAttribute PasswordChangeDto passwordChangeDto,
                               BindingResult br, Model model, @PathVariable Long memberId) {
 
         log.info("passwordChangeDto = {}", passwordChangeDto);
@@ -116,15 +121,17 @@ public class MemberController {
         }
 
         if (!passwordChangeDto.getInputPassword().equals(passwordChangeDto.getConfirmPassword())) {
-            br.reject("inputPasswordNotMatch", "입력하신 두 비밀번호가 일치하지 않습니다.");
+            br.rejectValue("confirmPassword", "inputPasswordNotMatch", "입력하신 두 비밀번호가 일치하지 않습니다.");
             return "member/passwordEditForm";
         }
 
-
-        if (!memberService.checkPassword(memberId, passwordChangeDto.getCurrentPassword())) {
-            br.reject("passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
+        String rawPassword = passwordChangeDto.getCurrentPassword();
+        String encodedPassword = memberService.findMemberById(memberId).getPassword();
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            br.rejectValue("currentPassword", "passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
             return "member/passwordEditForm";
         }
+
         try {
             memberService.updatePassword(memberId, passwordChangeDto);
         } catch (EntityNotFoundException e) {
@@ -138,6 +145,7 @@ public class MemberController {
     public String deleteMember(@PathVariable Long memberId) {
 
         memberService.deleteMember(memberId);
+
         return "login";
     }
 

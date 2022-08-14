@@ -2,69 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>프로필 수정 - 가지가지한다</title>
+    <title>프로필 수정 - 춤추는 고래</title>
 
-    <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/general.css}"  rel="stylesheet">
+    <link th:href="@{/css/member-forms.css}" rel="stylesheet">
+
     <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script type="text/javascript" th:src="@{/js/general.js}"></script>
     <script src="https://kit.fontawesome.com/c2e67fd6d1.js" crossorigin="anonymous"></script>
 
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
-
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-            font-size: small;
-
-        }
-
-        .form-signin label {
-            margin: 6px 6px;
-        }
-
-        .form-signin button {
-            background-color:  #7952b3;
-            color: white;
-        }
-        .navbar .container{
-            max-width: 600px;
-        }
-
-    </style>
 </head>
 <body>
+<div th:replace ="~{fragment/writingModal :: modal}"></div>
+
 <div th:replace ="~{fragment/header :: header}"></div>
+
 <main class="form-signin d-flex justify-content-center mt-5">
     <form th:action th:object="${profile}" method="post" style="width: 25rem;">
-        <div style="height: 124px; width: 100%">
-            <h1 class="h3 mb-3 fw-normal text-center">프로필 수정</h1>
+        <div class="d-flex justify-content-center">
+            <h1 class="h3 mb-3 fw-normal">프로필 수정</h1>
         </div>
         <div class="mb-4">
-            <div>
+            <div class="mb-3">
                 <label for="name" th:text="#{member.name}">성명</label>
-                <input type="text" th:field="*{name}" class="form-control form-control-lg" id="name">
+                <input type="text" th:field="*{name}" class="form-control" id="name">
                 <div class="field-error" th:errors="*{name}">
                     성명 오류
                 </div>
             </div>
 
-            <div>
+            <div class="mb-3">
                 <label for="nickName" th:text="#{member.nickName}">사용자 이름</label>
-                <input type="text" th:field="*{nickName}" class="form-control form-control-lg" id="nickName">
+                <input type="text" th:field="*{nickName}" class="form-control" id="nickName">
                 <div class="field-error" th:errors="*{nickName}">
                     사용자 이름 오류
                 </div>
             </div>
 
-
-            <div class="mt-3">
-                <label for="password" th:text="#{member.password}">비밀번호</label>
-                <input type="password" th:field="*{password}" class="form-control form-control-lg" id="password">
+            <div>
+                <label for="password">계정 비밀번호</label>
+                <input type="password" th:field="*{password}" class="form-control" id="password">
                 <div class="field-error" th:errors="*{password}">
-                    사용자 이름 오류
+                    비밀번호 오류
                 </div>
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <p class="field-error" th:each="err : ${#fields.globalErrors()}"
@@ -76,4 +56,10 @@
     </form>
 </main>
 </body>
+
+
+<script>
+
+
+</script>
 </html>

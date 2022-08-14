@@ -6,10 +6,12 @@ import com.k1ng.doinggajigaji.dto.ProfileEditDto;
 import com.k1ng.doinggajigaji.entity.Member;
 import com.k1ng.doinggajigaji.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import javax.persistence.EntityNotFoundException;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     private final MemberRepository memberRepository;
@@ -67,6 +70,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     @Override
     public boolean checkPassword(Long memberId, String currentPassword) {
         Member foundMember = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        log.info("currentPassword={}, member password = {}", currentPassword, foundMember.getPassword());
         return foundMember.getPassword().equals(currentPassword);
     }
 

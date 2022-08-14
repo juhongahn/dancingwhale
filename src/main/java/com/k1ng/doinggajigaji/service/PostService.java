@@ -14,4 +14,5 @@ public interface PostService {
     PostFormDto findPostById(Long postId);
     Long updatePost(PostFormDto postFormDto, List<MultipartFile> postImgFileList) throws IOException;
     PostFormDto getPostDtl(Long postId);
+    void deletePost(Long postId);
 }

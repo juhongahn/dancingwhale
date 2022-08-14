@@ -10,10 +10,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/post/new}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/post/new}" method="post" enctype="multipart/form-data" id="modal-form">
                     <div class="mb-3">
                         <label for="message-text" class="col-form-label" th:text="#{post.post.content}">내용</label>
-                        <textarea type="text" rows="6" cols="60" class="form-control" name="description" id="message-text"></textarea>
+                        <textarea type="text" rows="6" cols="60" class="form-control"
+                                  name="description" id="message-text" wrap="hard"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="formFileMultiple" class="form-label">사진 선택</label>
@@ -22,12 +23,11 @@
                     <ul id="imgPreview" class="sortable d-flex justify-content-start ms-0">
                     </ul>
                     <div class="d-flex justify-content-end" >
-                        <button type="submit" class="btn confirmBtn me-1" th:text="#{confirm}" id="postSubmitBtn">확인</button>
+                        <button type="button" class="btn confirmBtn me-1"
+                                th:text="#{confirm}" id="postSubmitBtn" onclick="formEmptyCheck()">확인</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">취소</button>
                     </div>
                 </form>
-
-
             </div>
         </div>
     </div>

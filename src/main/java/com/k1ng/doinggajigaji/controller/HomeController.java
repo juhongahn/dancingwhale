@@ -1,4 +1,4 @@
-package com.k1ng.doinggajigaji;
+package com.k1ng.doinggajigaji.controller;
 
 import com.k1ng.doinggajigaji.dto.CardFormDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
@@ -7,6 +7,7 @@ import com.k1ng.doinggajigaji.service.MemberService;
 import com.k1ng.doinggajigaji.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +29,11 @@ public class HomeController {
         // 작성자, 사진, 글은 post 엔티티에서 가져올 수 있다.
 
         List<CardFormDto> allCard = postService.getAllCardForm();
-        if (!allCard.isEmpty()) {
-            log.info("Home: {}", allCard.get(0));
-        }
+        if (!allCard.isEmpty())
+            log.info("description={}", allCard.get(0).getDescription()) ;
 
+        val nlString = System.getProperty("line.separator").toString();
+        model.addAttribute("nlString", nlString);
         model.addAttribute("cards", allCard);
         return "index";
     }

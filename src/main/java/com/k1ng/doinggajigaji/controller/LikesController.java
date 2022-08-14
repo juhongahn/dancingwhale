@@ -20,9 +20,9 @@ import java.security.Principal;
 public class LikesController {
 
     private final LikesService likesService;
-    private final MemberService memberService;
 
-
+    
+    // 좋아요 등록
     @ResponseBody
     @PostMapping("/new")
     public ResponseEntity<String> saveLikes(@RequestParam Long postId, Principal principal) {

@@ -2,60 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입 - 가지가지한다</title>
+    <title>회원가입 - 춤추는 고래</title>
 
     <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.css" rel="stylesheet">
+    <link th:href="@{/css/member-forms.css}" rel="stylesheet">
+
     <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
 
     <style>
-
-        html,
         body {
-            height: 100%;
-        }
-
-        body {
-
             padding-top: 40px;
             padding-bottom: 40px;
             background-color: #f5f5f5;
         }
-
         .form-signin {
             width: 100%;
             max-width: 330px;
             padding: 15px;
             margin: auto;
         }
-
         .form-signin .checkbox {
             font-weight: 400;
         }
-
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-            font-size: small;
-
-        }
-
-        .form-signin label {
-            margin: 6px 6px;
-        }
-
-        .form-signin button {
-            background-color:  #7952b3;
-            color: white;
-        }
-
     </style>
 </head>
 <body>
 
 <main class="form-signin">
     <form th:action th:object="${member}" method="post">
-        <div style="height: 124px; width: 100%">
-            <h1 class="h3 mb-3 fw-normal text-center"  th:text="#{logo}">가지가지한다</h1>
+        <div style="height: 80px; width: 100%">
+            <h1 class="h3 mb-3 fw-normal text-center" onclick="location.href='/login'"
+                th:text="#{logo}" style="cursor: pointer;"></h1>
         </div>
 
         <div class="mb-4">

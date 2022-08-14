@@ -8,16 +8,13 @@ import javax.validation.constraints.Size;
 @Data
 public class PasswordChangeDto {
 
-    @NotBlank
-    @Size(min = 8, max = 16)
+    @Size(min = 8, max = 16, message = "8 ~ 16자 사이로 입력하세요.")
     private String inputPassword;
 
     @NotBlank
-    @Size(min = 8, max = 16)
     private String confirmPassword;
 
     @NotBlank
-    @Size(min = 8, max = 16)
     private String currentPassword;
 
 }

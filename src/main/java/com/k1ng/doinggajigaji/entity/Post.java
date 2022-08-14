@@ -36,6 +36,9 @@ public class Post extends BaseEntity{
     List<Likes> likesList = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<PostImg> postImgList = new ArrayList<>();
+
     public Post(String description) {
         this.description = description;
     }

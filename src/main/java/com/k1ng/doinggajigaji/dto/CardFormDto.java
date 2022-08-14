@@ -22,6 +22,8 @@ public class CardFormDto {
 
     private String description;
 
+    private String email;
+
     private List<PostImgDto> postImgDtoList = new ArrayList<>();
 
     private static ModelMapper modelMapper = new ModelMapper();
@@ -30,6 +32,9 @@ public class CardFormDto {
         CardFormDto cardFormDto = new CardFormDto();
         // 글 아이디
         cardFormDto.setPostId(post.getId());
+
+        // 현재 사용자와 작성자 비교를 위해
+        cardFormDto.setEmail(post.getMember().getEmail());
 
         // 작성자 이름
         cardFormDto.setNickName(post.getMember().getNickName());

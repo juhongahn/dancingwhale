@@ -2,35 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>내 정보 - 가지가지한다</title>
+    <title>내 정보 - 춤추는 고래</title>
 
     <link th:href="@{/css/bootstrap.css}" href="../css/bootstrap.css" rel="stylesheet">
+    <link th:href="@{/css/general.css}" href="../static/css/general.css" rel="stylesheet">
+    <link th:href="@{/css/member-forms.css}" rel="stylesheet">
+
     <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script type="text/javascript" th:src="@{/js/general.js}"></script>
     <script src="https://kit.fontawesome.com/c2e67fd6d1.js" crossorigin="anonymous"></script>
 
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
-
-        .form-signin label {
-            margin: 6px 6px;
-        }
-
-        .form-signin button {
-            background-color:  #7952b3;
-            color: white;
-        }
-
-        .navbar .container{
-            max-width: 600px;
-        }
-
-
-    </style>
 </head>
 <body>
+<div th:replace ="~{fragment/writingModal :: modal}"></div>
+
 <div th:replace ="~{fragment/header :: header}"></div>
 <main class="form-signin d-flex justify-content-center mt-5">
     <div th:object="${profile}">
@@ -50,10 +35,12 @@
                 <a class="list-group-item list-group-item-action" th:href="@{/member/{memberId}/password/edit(memberId=${profile.id})}">
                     비밀번호 변경
                 </a>
-                <li class="list-group-item">회원탈퇴</li>
+                <li class="list-group-item list-group-item-action">회원 탈퇴</li>
+                <li class="list-group-item list-group-item-action">내가 쓴 글</li>
             </ul>
         </div>
     </div>
+
 </main>
 </body>
 </html>

@@ -1,0 +1,18 @@
+html,
+body {
+    height: 100%;
+}
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+    font-size: small;
+
+}
+.form-signin label {
+    margin: 6px 6px;
+}
+
+.form-signin button {
+    background-color:  #7952b3;
+    color: white;
+}

@@ -1,68 +1,21 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>가지가지한다</title>
+    <title>춤추는 고래</title>
 
     <link th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css" rel="stylesheet">
-    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}" src="../static/js/bootstrap.bundle.js"></script>
+    <link th:href="@{/css/general.css}" href="../static/css/general.css" rel="stylesheet">
+    <link th:href="@{/css/slick.css}" rel="stylesheet">
+
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
     <script src="https://kit.fontawesome.com/c2e67fd6d1.js" crossorigin="anonymous"></script>
     <script src="\webjars\jquery\3.5.1\dist\jquery.js"></script>
+    <script type="text/javascript" th:src="@{/js/modal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/general.js}"></script>
+    <script type="text/javascript" th:src="@{/js/slick.js}"></script>
 
-
-    <style>
-
-        .container {
-            max-width: 470px;
-        }
-        .navbar .container{
-            max-width: 600px;
-        }
-        .navbar{
-            height: 65px;
-        }
-        .confirmBtn{
-            background-color: #7952b3;
-            color: white;
-        }
-        .card-header{
-            background-color: #7952b3;
-            color: white;
-        }
-        .modal-header{
-            background-color: #7952b3;
-            color: white;
-        }
-
-        #imgPreview li{
-            margin-left: 10px;
-            margin-bottom: 10px;
-            position: relative;
-            border: 1px solid #ececec;
-            cursor:move;
-        }
-
-        #imgPreview{
-            list-style:none;
-            padding-left:0;
-        }
-
-        .delBtn{
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 13px;
-            background-color: #000;
-            color: #fff;
-            width: 18px;
-            height: 18px;
-            line-height: 16px;
-            display: inline-block;
-            text-align: center;
-            cursor: pointer;
-        }
-
-    </style>
 </head>
 <body>
 
@@ -72,177 +25,95 @@
     <div class="container">
         <!-- 본문 카드 -->
         <div th:if="${cards.size()==0}">
-            텅...
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">아무도 글을 등록하지 않았어요</h5>
+                    <p class="card-text">저에게 여러분의 하루를 알려주세요!</p>
+                    <a class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="new"
+                       style="cursor: pointer;">글 등록하러 가기</a>
+                </div>
+            </div>
         </div>
 
-        <div class="card mt-2 border-bottom-0" th:unless ="${cards.size()==0}" th:each="card : ${cards}" >
+        <div class="card mb-4" th:unless ="${cards.size()==0}" th:each="card : ${cards}" >
             <input type="hidden" name="postId" th:value="${card.postId}">
-            <div class="card-header d-flex justify-content-between align-items-center" >
+            <div class="card-header d-flex justify-content-between align-items-center"
+                 th:with="username=${#authentication.name}">
                 <span th:text="${card.nickName}"></span>
-                <div>
-                    <button type="button" id="editFormOpenBtn" th:onclick="|javascript:openEditForm('${card.postId}')|"
-                    data-bs-whatever="edit">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <i class="fas fa-trash-alt"></i>
+                <div th:if="${#strings.equals(card.email, username)}">
+                    <i class="fas fa-edit"
+                       id="editFormOpenBtn" th:onclick="|javascript:openEditForm('${card.postId}')|"
+                       data-bs-whatever="edit"></i>
+                    <a th:href="@{/post/{postId}/delete(postId=${card.postId})}"
+                       onclick="return confirm('삭제하시겠습니까?')">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
                 </div>
             </div>
-            <img src="..." class="card-img-top" style="height: 470px;" alt="...">
-            <div class="card-body border-top border-bottom">
-                <div>
-                    <span><i class="far fa-heart"
-                             th:onclick="|javascript:sendNewLikesRequest('${card.postId}')|"></i>
-                        <i class="far fa-thumbs-down"></i>
-                    </span>
+
+            <section class="visual" th:if="${!card.getPostImgDtoList().isEmpty()}">
+                <div class="visual-container" th:each="postImgDto : ${card.getPostImgDtoList()}">
+                    <img th:src="@{${postImgDto.imgUrl}}" th:alt="${postImgDto.getImgName()}">
                 </div>
-                <small class="card-text fw-bold" th:text="|좋아요 ${card.likesCnt}|"></small>
-                <p class="card-text" th:text="${card.description}">Some quick example text.</p>
+            </section>
+
+            <div class="card-body pt-1">
+                <p class="card-text" th:utext="${#strings.replace(card.description
+                ,nlString, '&lt;br /&gt;')}"></p>
             </div>
-            <form action="#" >
-                <input type="text" class="col-8"/>
-                <button class="col">댓글</button>
-            </form>
+
+            <div class="card-footer text-center px-0 py-2">
+                <i class="far fa-heart"
+                   th:onclick="|javascript:sendNewLikesRequest('${card.postId}')|"></i>
+            </div>
         </div>
 
 
     </div>
 </body>
+<script>
+    $(window).on("load", function () {
+        $('.card-text').val().replace(/\n/g, "<br>");
+    });
 
 
-<script th:inlne="javascript">
+    $('.visual').slick();
 
+    function formEmptyCheck(){
+        //공백이면 알림창 띄우고 종료
+        if($('#message-text').val().trim() === ''){
+            alert("아무것도 입력되지 않았습니다.");
+            return;
+        }
 
-
-    <!-- 모달 -->
-    var exampleModal  = document.getElementById('exampleModal');
-    var modal = bootstrap.Modal.getOrCreateInstance(exampleModal);
+        $('#modal-form').submit();
+    }
 
     function openEditForm(postId) {
+        var exampleModal = document.getElementById('exampleModal');
+        var modal = bootstrap.Modal.getOrCreateInstance(exampleModal);
         fetch('/post/'+ postId +'/edit')
             .then((res) => res.json())
             .then((data) => {
+                    console.log(data);
                     $('#message-text').val(data.description);
-                    console.log(data.postImgDtoList);
-                    data.postImgDtoList.forEach(function (postImgDto) {
-                        // div에 이미지추가.
-                        var str = '<li class="ui-state-default">';
-                        str += '<img src="'+postImgDto.imgUrl +'" alt="'+ postImgDto.imgName +'" width=80 height=80>';
-                        str += '<span class="delBtn" onclick="delImg(this)">x</span>';
-                        str += '</li>';
-                        $(str).appendTo('#imgPreview');
-
-                    });
+                    if (data.postImgDtoList.length !== 0) {
+                        data.postImgDtoList.forEach(function (postImgDto) {
+                            // div에 이미지추가.
+                            var str = '<li class="ui-state-default">';
+                            str += '<img src="'+postImgDto.imgUrl +'" alt="'+ postImgDto.imgName +'" width=80 height=80>';
+                            str += '<span class="delBtn" onclick="delImg(this)">x</span>';
+                            str += '</li>';
+                            $(str).appendTo('#imgPreview');
+                        });
+                    }
                 }
-            )
+            );
         var editBtn  = document.getElementById('editFormOpenBtn');
         modal.show(editBtn);
     }
 
-    function sendNewLikesRequest(postId) {
 
-        fetch('/likes/new', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                'postId': postId
-            })
-        })
-            .then(res => res.json())
-            .then(data => {
-                alert(data)
-                window.location.reload();
-            })
-
-    }
-
-    <!-- 모달 오픈 이벤트 등록 -->
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-
-        var button = event.relatedTarget;
-        var recipient = button.getAttribute('data-bs-whatever');
-        var confirmBtn = document.getElementById('postSubmitBtn');
-        var modalTitle = document.getElementById('exampleModalLabel');
-
-        console.log(recipient);
-
-        if (recipient === "new") {
-            // 비워주고.
-            $('#message-text').val('');
-            $('#imgPreview').empty();
-            $('#formFileMultiple').val(null);
-            modalTitle.textContent = "새 게시물 만들기";
-            confirmBtn.innerText = "작성"
-        } else {
-            modalTitle.textContent = "게시물 수정하기";
-            confirmBtn.innerText = "수정"
-        }
-    });
-
-    <!-- 모달 닫기 이벤트 등록 -->
-    exampleModal.addEventListener('hide.bs.modal', function (event) {
-        // 비워주고.
-        $('#message-text').val('');
-        $('#imgPreview').empty();
-        $('#formFileMultiple').val(null);
-    });
-
-    const fileInput = document.getElementById('formFileMultiple');
-
-    fileInput.addEventListener("change", function (event) {
-        var fileName = fileInput.value.split("\\").pop();
-        var fileExt = fileName.substring(fileName.lastIndexOf(".")+1);  //확장자 추출
-        fileExt = fileExt.toLowerCase();
-
-        if (fileExt != "jpg" && fileExt != "jpeg" && fileExt != "gif" && fileExt != "png"
-            && fileExt != "bmp") {
-            alert("이미지 파일만 등록이 가능합니다.")
-            return;
-        }
-
-        // 비워주고.
-        $('#imgPreview').empty();
-        // 업로드한 파일들 가져오고.
-        var files = event.target.files;
-        console.log(files);
-        // 이 코드가 존재하는 함수의 매개변수로 넘어온 값들을 array로 변환하겠다는 뜻이다.
-        var arr = Array.prototype.slice.call(files);
-        preview(arr);
-    });
-
-    function preview(arr){
-        arr.forEach(function (file) {
-            // div에 이미지추가.
-            var str = '<li class="ui-state-default">';
-            if (file.type.match('image.*')) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    str += '<img src="'+e.target.result+'" title="'+file.name+'" width=80 height=80>';
-                    str += '<span class="delBtn" onclick="delImg(this)">x</span>';
-                    str += '</li>';
-                    $(str).appendTo('#imgPreview');
-                }
-                reader.readAsDataURL(file);
-            }
-
-
-        });
-    }
-
-    function delImg(_this){
-
-        const dataTransfer = new DataTransfer();
-        let files = $('#formFileMultiple')[0].files;
-        let fileArray = Array.from(files);
-        let index = $('#imgPreview').find(_this).parent('li').index();
-        fileArray.splice(index, 1);
-        fileArray.forEach(file => { dataTransfer.items.add(file); });
-        $('#formFileMultiple')[0].files = dataTransfer.files;
-
-        $(_this).parent('li').remove();
-    }
 </script>
 </html>
 
