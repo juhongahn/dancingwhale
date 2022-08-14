@@ -1,5 +1,6 @@
 package com.k1ng.doinggajigaji.controller;
 
+import com.k1ng.doinggajigaji.dto.DeletePostDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -59,8 +60,7 @@ public class PostController {
         }
     }
 
-
-    @PreAuthorize("isAuthenticated() and ((#postFormDto == principal.name) or hasRole('ADMIN'))")
+    @PreAuthorize("isAuthenticated() and ((#postFormDto.email == principal.username) or hasRole('ADMIN'))")
     @PostMapping("/{postId}/edit")
     public String postUpdate(@Validated PostFormDto postFormDto, BindingResult br,
             @RequestParam("postImgFile") List<MultipartFile> postImgFileList, Model model) {
@@ -79,10 +79,12 @@ public class PostController {
         }
         return "redirect:/";
     }
-
-    @GetMapping("/{postId}/delete")
-    public String  deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return "redirect:/";
+    @ResponseBody
+    @PreAuthorize("isAuthenticated() and ((#deletePostDto.email == principal.username) or hasRole('ADMIN'))")
+    @PostMapping("/delete")
+    public ResponseEntity<String> deletePost(DeletePostDto deletePostDto) {
+        log.info("deletePostDto={}", deletePostDto);
+        postService.deletePost(deletePostDto.getPostId());
+        return new ResponseEntity<>("\"삭제됐습니다.\"", HttpStatus.OK);
     }
 }

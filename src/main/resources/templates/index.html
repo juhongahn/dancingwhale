@@ -44,10 +44,16 @@
                     <i class="fas fa-edit"
                        id="editFormOpenBtn" th:onclick="|javascript:openEditForm('${card.postId}')|"
                        data-bs-whatever="edit"></i>
-                    <a th:href="@{/post/{postId}/delete(postId=${card.postId})}"
-                       onclick="return confirm('삭제하시겠습니까?')">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
+
+                    <i class="fas fa-trash-alt"
+                       th:postId="${card.postId}"
+                       th:email="${card.email}"
+                       th:onclick="|requestPostDelete(this.getAttribute('postId'), this.getAttribute('email'))|"></i>
+
+<!--                    <a th:href="@{/post/{postId}/delete(postId=${card.postId})}"-->
+<!--                       onclick="return confirm('삭제하시겠습니까?')">-->
+<!--                        <i class="fas fa-trash-alt"></i>-->
+<!--                    </a>-->
                 </div>
             </div>
 
@@ -80,8 +86,28 @@
             alert("아무것도 입력되지 않았습니다.");
             return;
         }
-
         $('#modal-form').submit();
+    }
+
+    function requestPostDelete(postId, email) {
+
+        if (confirm("삭제하시겠습니까?")) {
+            fetch('/post/delete', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'postId': postId,
+                    'email': email
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data);
+                    window.location.reload();
+                })
+        }
     }
 
     function openEditForm(postId) {
@@ -92,6 +118,7 @@
             .then((data) => {
                     console.log(data);
                     $('#message-text').val(data.description);
+                    $('#userEmail').val(data.email);
                     $("input:checkbox[id='onlyMe']").prop("checked", data.onlyMe);
                     if (data.postImgDtoList.length !== 0) {
                         data.postImgDtoList.forEach(function (postImgDto) {

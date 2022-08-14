@@ -27,8 +27,6 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     @Override
     public Member join(Member member) {
-        // 컨트롤러에서 이미 검증함.
-        // validateDuplicateMember(member);
         return memberRepository.save(member);
     }
 
@@ -77,13 +75,6 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     public Long deleteMember(Member member) {
         memberRepository.delete(member);
         return member.getId();
-    }
-
-    private void validateDuplicateMember(Member member){
-        Member findMember = memberRepository.findByEmail(member.getEmail());
-        if(findMember != null){
-            throw new IllegalStateException("이미 가입된 회원입니다.");
-        }
     }
 
     @Override

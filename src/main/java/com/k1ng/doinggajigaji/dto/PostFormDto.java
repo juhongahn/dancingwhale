@@ -1,6 +1,7 @@
 package com.k1ng.doinggajigaji.dto;
 
 import com.k1ng.doinggajigaji.entity.Post;
+import com.k1ng.doinggajigaji.entity.PostImg;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -29,6 +31,8 @@ public class PostFormDto {
 
     private boolean onlyMe;
 
+    private String email;
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Post createPost(){
@@ -36,6 +40,21 @@ public class PostFormDto {
     }
 
     public static PostFormDto of(Post post) {
-        return modelMapper.map(post, PostFormDto.class);
+
+        PostFormDto postFormDto = new PostFormDto();
+
+        postFormDto.setId(postFormDto.getId());
+        postFormDto.setEmail(post.getMember().getEmail());
+        postFormDto.setDescription(post.getDescription());
+
+        List<Long> imgIds = post.getPostImgList().stream().map(PostImg::getId).collect(Collectors.toList());
+        postFormDto.setPostImgIds(imgIds);
+
+        List<PostImgDto> imgDtoList = post.getPostImgList().stream().map(PostImgDto::of).collect(Collectors.toList());
+        postFormDto.setPostImgDtoList(imgDtoList);
+
+        postFormDto.setOnlyMe(post.isOnlyMe());
+
+        return postFormDto;
     }
 }

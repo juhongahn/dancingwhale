@@ -1,7 +1,6 @@
 package com.k1ng.doinggajigaji.dto;
 
 import com.k1ng.doinggajigaji.entity.Member;
-import com.k1ng.doinggajigaji.entity.Post;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -18,6 +17,8 @@ public class ProfileEditDto {
 
     @NotBlank
     private String password;
+
+    private String email;
 
     private static ModelMapper modelMapper = new ModelMapper();
 

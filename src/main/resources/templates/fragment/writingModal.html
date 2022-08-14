@@ -11,6 +11,7 @@
             </div>
             <div class="modal-body">
                 <form th:action="@{/post/new}" method="post" enctype="multipart/form-data" id="modal-form">
+                    <input type="hidden" name="email" id="userEmail">
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
                             <label for="message-text" class="col-form-label" th:text="#{post.post.content}">내용</label>
