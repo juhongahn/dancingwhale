@@ -127,13 +127,14 @@ public class MemberController {
 
         String rawPassword = passwordChangeDto.getCurrentPassword();
         String encodedPassword = memberService.findMemberById(memberId).getPassword();
+
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             br.rejectValue("currentPassword", "passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
             return "member/passwordEditForm";
         }
 
         try {
-            memberService.updatePassword(memberId, passwordChangeDto);
+            memberService.updatePassword(memberId, passwordChangeDto, passwordEncoder);
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/profile";
@@ -141,10 +142,21 @@ public class MemberController {
         return "redirect:/member/profile";
     }
 
-    @GetMapping("/{memberId}/delete")
-    public String deleteMember(@PathVariable Long memberId) {
+    @GetMapping("/delete")
+    public String deleteForm() {
+        return "member/deleteMemberForm";
+    }
 
-        memberService.deleteMember(memberId);
+    @PostMapping("/delete")
+    public String deleteMember(@RequestParam String rawPassword, Model model, Principal principal) {
+        Member foundMember = memberService.findMemberByEmail(principal.getName());
+
+        if (passwordEncoder.matches(rawPassword, foundMember.getPassword())){
+            memberService.deleteMember(foundMember);
+        } else {
+            model.addAttribute("errorMessage", "계정 비밀번호가 일치하지 않습니다.");
+            return "member/deleteMemberForm";
+        }
 
         return "login";
     }

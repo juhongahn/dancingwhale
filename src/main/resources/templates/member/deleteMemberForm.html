@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 탈퇴 - 춤추는 고래</title>
+
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/general.css}"  rel="stylesheet">
+    <link th:href="@{/css/member-forms.css}" rel="stylesheet">
+
+    <script src="\webjars\jquery\3.5.1\dist\jquery.js"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script type="text/javascript" th:src="@{/js/general.js}"></script>
+    <script src="https://kit.fontawesome.com/c2e67fd6d1.js" crossorigin="anonymous"></script>
+
+    <script th:inline="javascript">
+
+        $(document).ready(function(){
+            var errorMessage = [[${errorMessage}]];
+            if(errorMessage !== null){
+                $('.field-error').text(errorMessage);
+            }
+        });
+    </script>
+</head>
+<body>
+<div th:replace ="~{fragment/writingModal :: modal}"></div>
+
+<div th:replace ="~{fragment/header :: header}"></div>
+
+<main class="form-signin d-flex justify-content-center mt-5">
+    <form th:action method="post" style="width: 25rem;">
+        <div class="d-flex justify-content-center">
+            <h1 class="h3 mb-3 fw-normal">프로필 수정</h1>
+        </div>
+        <div class="mb-4">
+            <div>
+                <label for="password">계정 비밀번호</label>
+                <input type="password" name="rawPassword" class="form-control" id="password">
+                <div class="field-error"></div>
+            </div>
+        </div>
+        <button class="w-100 btn btn-lg" type="submit" >수정</button>
+    </form>
+</main>
+</body>
+
+</html>

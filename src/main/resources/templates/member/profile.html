@@ -35,7 +35,9 @@
                 <a class="list-group-item list-group-item-action" th:href="@{/member/{memberId}/password/edit(memberId=${profile.id})}">
                     비밀번호 변경
                 </a>
-                <li class="list-group-item list-group-item-action">회원 탈퇴</li>
+                <a class="list-group-item list-group-item-action" th:href="@{/member/delete}">
+                    회원 탈퇴
+                </a>
                 <li class="list-group-item list-group-item-action">내가 쓴 글</li>
             </ul>
         </div>

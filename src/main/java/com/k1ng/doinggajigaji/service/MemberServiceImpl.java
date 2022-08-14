@@ -59,12 +59,11 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     }
 
     @Override
-    public Long updatePassword(Long memberId, PasswordChangeDto passwordChangeDto) {
+    public Long updatePassword(Long memberId, PasswordChangeDto passwordChangeDto, PasswordEncoder passwordEncoder) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(EntityNotFoundException::new);
-        member.updatePassword(passwordChangeDto);
-
+        member.updatePassword(passwordChangeDto, passwordEncoder);
         return member.getId();
     }
     @Override
@@ -75,8 +74,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
     }
 
     @Override
-    public Long deleteMember(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+    public Long deleteMember(Member member) {
         memberRepository.delete(member);
         return member.getId();
     }

@@ -59,8 +59,8 @@ public class Member extends BaseTimeEntity{
         this.setUpdateTime(LocalDateTime.now());
     }
 
-    public void updatePassword(PasswordChangeDto passwordChangeDto){
-        this.password = passwordChangeDto.getConfirmPassword();
+    public void updatePassword(PasswordChangeDto passwordChangeDto, PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(passwordChangeDto.getConfirmPassword());
     }
 
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,7 +49,7 @@ public class PostController {
     // 게시물 수정
     @ResponseBody
     @GetMapping("/{postId}/edit")
-    public ResponseEntity<PostFormDto> postUpdateForm(@PathVariable Long postId, Model model) {
+    public ResponseEntity<PostFormDto> postUpdateForm(@PathVariable Long postId) {
 
         try {
             PostFormDto postFormDto = postService.getPostDtl(postId);
@@ -59,9 +60,13 @@ public class PostController {
     }
 
 
+    @PreAuthorize("isAuthenticated() and ((#postFormDto == principal.name) or hasRole('ADMIN'))")
     @PostMapping("/{postId}/edit")
     public String postUpdate(@Validated PostFormDto postFormDto, BindingResult br,
             @RequestParam("postImgFile") List<MultipartFile> postImgFileList, Model model) {
+
+        log.info("postFormDto={}",postFormDto);
+
         if (br.hasErrors()) {
             model.addAttribute("error", "수정에 실패했습니다.");
             return "index";
