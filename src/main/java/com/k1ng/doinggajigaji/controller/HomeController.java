@@ -8,13 +8,18 @@ import com.k1ng.doinggajigaji.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,17 +28,23 @@ public class HomeController {
 
     private final PostService postService;
 
-    @GetMapping("/")
-    public String homepage(@ModelAttribute("post") PostFormDto postFormDto, Model model, Principal principal) {
+    @GetMapping(value = {"/", "/{page}"})
+    public String homepage(@ModelAttribute("post") PostFormDto postFormDto, @PathVariable("page") Optional<Integer> page,
+                           Model model, Principal principal) {
+
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), 3);
 
         // 필요한것들 1. 작성자 2. 사진 3. 좋아요 갯수 4. 글
         // 작성자, 사진, 글은 post 엔티티에서 가져올 수 있다.
 
-        List<CardFormDto> allCard = postService.getAllCardForm(principal.getName());
+        Page<CardFormDto> allCardForm = postService.getAllCardForm(principal.getName(), pageRequest);
 
         val nlString = System.getProperty("line.separator").toString();
+
         model.addAttribute("nlString", nlString);
-        model.addAttribute("cards", allCard);
+        model.addAttribute("cards", allCardForm);
+        model.addAttribute("maxPage", 5);
+
         return "index";
     }
 

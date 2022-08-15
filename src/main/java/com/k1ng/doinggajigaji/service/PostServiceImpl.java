@@ -11,6 +11,10 @@ import com.k1ng.doinggajigaji.repository.PostImgRepository;
 import com.k1ng.doinggajigaji.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +38,7 @@ public class PostServiceImpl implements PostService {
     private final PostImgRepository postImgRepository;
 
     @Override
-    public Long savePost(PostFormDto postFormDto, String email, List<MultipartFile> itemImgFileList) throws Exception {
+    public Long savePost(PostFormDto postFormDto, String email, List<MultipartFile> postImgFileList) throws Exception {
 
         // 게시물 등록
         Post post = postFormDto.createPost();
@@ -42,14 +46,17 @@ public class PostServiceImpl implements PostService {
         post.setMember(member);
         postRepository.save(post);
 
-        log.info(String.valueOf(itemImgFileList.size()));
+        
+        // ""인 파일이 있다면 제거
+        postImgFileList.stream()
+                .filter(multipartFile -> Objects.equals(multipartFile.getOriginalFilename(), ""))
+                .collect(Collectors.toList())
+                .forEach(postImgFileList::remove);
 
-        if (!Objects.equals(itemImgFileList.get(0).getOriginalFilename(), "")) {
-            for (MultipartFile multipartFile : itemImgFileList) {
-                PostImg postImg = new PostImg();
-                postImg.setPost(post);
-                postImgService.savePostImg(postImg, multipartFile);
-            }
+        for (MultipartFile multipartFile : postImgFileList) {
+            PostImg postImg = new PostImg();
+            postImg.setPost(post);
+            postImgService.savePostImg(postImg, multipartFile);
         }
         return post.getId();
     }
@@ -103,13 +110,13 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<CardFormDto> getAllCardForm(String email) {
+    public Page<CardFormDto> getAllCardForm(String email, PageRequest pageRequest) {
 
         List<PostImg> postImgList = postImgRepository.findAllByOrderByIdAsc();
 
         Member byEmail = memberRepository.findByEmail(email);
 
-        List<CardFormDto> cardFormDtoList = postRepository.findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(byEmail)
+        List<CardFormDto> cardFormDtoList = postRepository.findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(byEmail, pageRequest)
                 .stream().map(CardFormDto::of).collect(Collectors.toList());
 
         for (CardFormDto cardFormDto : cardFormDtoList) {
@@ -119,6 +126,6 @@ public class PostServiceImpl implements PostService {
                 }
             }
         }
-        return cardFormDtoList;
+        return new PageImpl<>(cardFormDtoList);
     }
 }
