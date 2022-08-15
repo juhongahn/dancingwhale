@@ -53,6 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
+        http.rememberMe()
+                .rememberMeParameter("remember-me")
+                .tokenValiditySeconds(3600)
+                .alwaysRemember(false)
+                .userDetailsService(memberService);
     }
 
     @Override

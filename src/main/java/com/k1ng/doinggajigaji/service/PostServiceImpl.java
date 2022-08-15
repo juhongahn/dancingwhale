@@ -110,14 +110,15 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<CardFormDto> getAllCardForm(String email, PageRequest pageRequest) {
+    public Page<CardFormDto> getAllCardForm(String email, Pageable pageable) {
 
         List<PostImg> postImgList = postImgRepository.findAllByOrderByIdAsc();
 
-        Member byEmail = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
 
-        List<CardFormDto> cardFormDtoList = postRepository.findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(byEmail, pageRequest)
-                .stream().map(CardFormDto::of).collect(Collectors.toList());
+        Page<CardFormDto> cardFormDtoList = postRepository.
+                findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(member, pageable).map(CardFormDto::of);
+
 
         for (CardFormDto cardFormDto : cardFormDtoList) {
             for (PostImg postImg : postImgList) {
@@ -126,6 +127,6 @@ public class PostServiceImpl implements PostService {
                 }
             }
         }
-        return new PageImpl<>(cardFormDtoList);
+        return cardFormDtoList;
     }
 }

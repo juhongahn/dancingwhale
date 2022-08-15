@@ -38,7 +38,7 @@
         <div class="mb-4">
             <div>
                 <label for="email"  th:text="#{member.email}">이메일</label>
-                <input type="text" th:field="*{email}" class="form-control form-control-lg" id="email">
+                <input type="text" th:field="*{email}" class="form-control" id="email">
                 <div class="field-error" th:errors="*{email}">
                     이메일 오류
                 </div>
@@ -46,7 +46,7 @@
 
             <div>
                 <label for="name" th:text="#{member.name}">성명</label>
-                <input type="text" th:field="*{name}" class="form-control form-control-lg" id="name">
+                <input type="text" th:field="*{name}" class="form-control" id="name">
                 <div class="field-error" th:errors="*{name}">
                     성명 오류
                 </div>
@@ -54,7 +54,7 @@
 
             <div>
                 <label for="nickName" th:text="#{member.nickName}">사용자 이름</label>
-                <input type="text" th:field="*{nickName}" class="form-control form-control-lg" id="nickName">
+                <input type="text" th:field="*{nickName}" class="form-control" id="nickName">
                 <div class="field-error" th:errors="*{nickName}">
                     사용자 이름 오류
                 </div>
@@ -62,7 +62,7 @@
 
             <div>
                 <label for="password" th:text="#{member.password}">비밀번호</label>
-                <input type="password" th:field="*{password}" class="form-control form-control-lg" id="password">
+                <input type="password" th:field="*{password}" class="form-control" id="password">
                 <div class="field-error" th:errors="*{password}">
                     비밀번호 오류
                 </div>

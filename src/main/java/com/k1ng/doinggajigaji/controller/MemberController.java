@@ -159,7 +159,7 @@ public class MemberController {
             return "member/deleteMemberForm";
         }
 
-        return "login";
+        return "redirect:/login";
     }
 
 }

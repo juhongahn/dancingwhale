@@ -11,6 +11,7 @@ import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,21 +31,16 @@ public class HomeController {
 
     @GetMapping(value = {"/", "/{page}"})
     public String homepage(@ModelAttribute("post") PostFormDto postFormDto, @PathVariable("page") Optional<Integer> page,
-                           Model model, Principal principal) {
+                           Model model, Principal principal, @PageableDefault(size = 5) Pageable pageable) {
 
-        PageRequest pageRequest = PageRequest.of(page.orElse(0), 3);
 
         // 필요한것들 1. 작성자 2. 사진 3. 좋아요 갯수 4. 글
         // 작성자, 사진, 글은 post 엔티티에서 가져올 수 있다.
 
-        Page<CardFormDto> allCardForm = postService.getAllCardForm(principal.getName(), pageRequest);
-
+        Page<CardFormDto> allCardForm = postService.getAllCardForm(principal.getName(), pageable);
         val nlString = System.getProperty("line.separator").toString();
-
         model.addAttribute("nlString", nlString);
         model.addAttribute("cards", allCardForm);
-        model.addAttribute("maxPage", 5);
-
         return "index";
     }
 

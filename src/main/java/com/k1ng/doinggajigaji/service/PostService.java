@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface PostService {
     Long savePost(PostFormDto postFormDto, String email, List<MultipartFile> itemImgFileList) throws Exception;
-    Page<CardFormDto> getAllCardForm(String email, PageRequest pageRequest);
+    Page<CardFormDto> getAllCardForm(String email, Pageable pageable);
     PostFormDto findPostById(Long postId);
     Long updatePost(PostFormDto postFormDto, List<MultipartFile> postImgFileList) throws IOException;
     PostFormDto getPostDtl(Long postId);

@@ -113,3 +113,15 @@
 .card-header i{
     cursor: pointer;
 }
+
+.page-item a {
+    border-color: #7952b3;
+    color: #7952b3;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+
+.page-item a:hover {
+    color: #7952b3;
+}
