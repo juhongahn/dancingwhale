@@ -5,77 +5,20 @@
     <title>로그인 - 춤추는 고래</title>
 
     <link th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css" rel="stylesheet">
+    <link th:href="@{/css/login.css}" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
 
-    <style>
-
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
-        }
-
-        .form-signin {
-            width: 100%;
-            max-width: 330px;
-            padding: 15px;
-            margin: auto;
-        }
-
-        .form-signin .checkbox {
-            font-weight: 400;
-        }
-
-        .form-signin .form-floating:focus-within {
-            z-index: 2;
-        }
-
-        .form-signin input[type="email"] {
-            margin-bottom: -1px;
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        .form-signin input[type="password"] {
-            margin-bottom: 10px;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-        }
-
-        .form-signin button {
-            background-color:  #7952b3;
-            color: white;
-        }
-
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-            font-size: small;
-
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-    </style>
 </head>
 <body class="text-center">
 
 <main class="form-signin">
     <form method="post" th:action="@{/login}">
-        <h1 class="h3 mb-3 fw-normal" th:text="#{logo}">가지가지한다</h1>
+        <h1 class="h3 mb-3 fw-normal" th:text="#{logo}"></h1>
 
         <div class="form-floating">
             <input type="text" class="form-control form-control-sm" name="email"
-                   id="floatingInput" placeholder="이메일" th:value="${session.email}">
+                   id="floatingInput" placeholder="이메일"
+                   th:value="${#request.getAttribute('email')}">
             <label for="floatingInput" th:text="#{member.email}">이메일</label>
         </div>
 
@@ -90,19 +33,23 @@
                 <input type="checkbox" name="remember-me"> 로그인 상태 유지
             </label>
         </div>
-        <div th:if="${session.errorMsg}">
-            <p class="field-error" th:text="${session.errorMsg}">에러</p>
+        <div th:if="${#request.getAttribute('errorMsg')}">
+            <p class="field-error" th:text="${#request.getAttribute('errorMsg')}">에러</p>
         </div>
         <button class="w-100 btn btn-lg" type="submit" th:text="#{member.signin.btn}">로그인</button>
 
-        <div class="d-flex justify-content-evenly mt-3">
+        <div class="d-flex justify-content-between mt-3">
             <a class="text-muted" th:href="@{/member/new}" th:text="#{member.signup}">회원가입</a>
-            <a class="text-muted" href="#">아이디 찾기</a>
             <a class="text-muted" href="#">비밀번호 찾기</a>
         </div>
-        <p class="mt-4 mb-3 text-muted">&copy; 2017–2021</p>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 </main>
-
 </body>
+<script th:inline="javascript">
+    var signupMsg = [[${signupResult}]];
+    if (signupMsg !== null) {
+        alert(signupMsg);
+    }
+</script>
 </html>

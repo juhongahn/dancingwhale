@@ -11,5 +11,5 @@ public class DeletePostDto {
 
     private Long postId;
 
-    private String email;
+    private Long memberId;
 }

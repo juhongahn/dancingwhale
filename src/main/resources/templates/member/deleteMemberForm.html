@@ -41,6 +41,7 @@
             </div>
         </div>
         <button class="w-100 btn btn-lg" onclick="return confirm('정말 탈퇴하시겠습니까?')" type="submit" >회원 탈퇴</button>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 </main>
 </body>

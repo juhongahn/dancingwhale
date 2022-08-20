@@ -47,9 +47,7 @@ $(window).on("load", function () {
             return;
         }
 
-        // 비워주고.
         $('#imgPreview').empty();
-        // 업로드한 파일들 가져오고.
         var files = event.target.files;
         console.log(files);
         // 이 코드가 존재하는 함수의 매개변수로 넘어온 값들을 array로 변환하겠다는 뜻이다.
@@ -80,8 +78,6 @@ function preview(arr){
             }
             reader.readAsDataURL(file);
         }
-
-
     });
 }
 

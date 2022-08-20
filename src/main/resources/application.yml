@@ -1,6 +1,16 @@
-
 # Datasource 소스
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: wednesday5028@gmail.com
+    password: zpoapnmapvxasumu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   servlet:
     multipart:
       max-file-size: 20MB
@@ -30,6 +40,9 @@ spring:
 
 # 세션 유지 시간 30분
 server:
+  error:
+    whitelabel:
+      enabled: false
   servlet:
     session:
       timeout: 1800
@@ -48,5 +61,7 @@ upload:
   postImgLocation: C:/doinggajigaji/post
   uploadPath: file:///C:/doinggajigaji/
 # 리소스 업로드 경로
+
+
 
 

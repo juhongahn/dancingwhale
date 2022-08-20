@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +24,13 @@ public class CardFormDto {
 
     private String description;
 
+    private List<PostImgDto> postImgDtoList = new ArrayList<>();
+
+    private Long memberId;
+
     private String email;
 
-    private List<PostImgDto> postImgDtoList = new ArrayList<>();
+    private LocalDateTime regTime;
 
     private static ModelMapper modelMapper = new ModelMapper();
 
@@ -35,6 +41,7 @@ public class CardFormDto {
 
         // 현재 사용자와 작성자 비교를 위해
         cardFormDto.setEmail(post.getMember().getEmail());
+        cardFormDto.setMemberId(post.getMember().getId());
 
         // 작성자 이름
         cardFormDto.setNickName(post.getMember().getNickName());
@@ -44,6 +51,9 @@ public class CardFormDto {
 
         // 글
         cardFormDto.setDescription(post.getDescription());
+
+        // 작성 시간
+        cardFormDto.setRegTime(post.getRegTime());
 
         return cardFormDto;
     }

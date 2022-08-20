@@ -45,6 +45,7 @@ public class Post extends BaseEntity{
     }
 
     public void updatePost(PostFormDto postFormDto) {
+        this.onlyMe = postFormDto.isOnlyMe();
         this.description = postFormDto.getDescription();
     }
 }

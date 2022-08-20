@@ -13,9 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Configuration
@@ -25,29 +24,25 @@ import javax.servlet.http.HttpSession;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService memberService;
+    private final LoginFailureHandler loginFailureHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .usernameParameter("email")
-                .failureHandler((request, response, exception) -> {
-                    String email = request.getParameter("email");
-                    HttpSession session = request.getSession();
-                    session.setAttribute("email", email);
-                    session.setAttribute("errorMsg", "아이디 또는 비밀번호가 맞지 않습니다.");
-                    response.sendRedirect("/login/error");
-                })
+                .failureHandler(loginFailureHandler)
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login");
 
-        http.csrf().disable();
+
 
         http.authorizeRequests()
-                .antMatchers("/login/**", "/member/new", "/logout", "/post/**").permitAll()
+                .antMatchers("/login/**", "/member/new", "/logout").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
@@ -59,6 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(3600)
                 .alwaysRemember(false)
                 .userDetailsService(memberService);
+
+        http.csrf()
+                .csrfTokenRepository(cookieCsrfRepository());
     }
 
     @Override
@@ -76,5 +74,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberService)
                 .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    CookieCsrfTokenRepository cookieCsrfRepository() {
+        CookieCsrfTokenRepository csrfRepository = new CookieCsrfTokenRepository();
+
+        csrfRepository.setCookieHttpOnly(false);
+        csrfRepository.setHeaderName("X-CSRF-TOKEN");
+        csrfRepository.setParameterName("_csrf");
+        csrfRepository.setCookieName("XSRF-TOKEN");
+
+        return csrfRepository;
     }
 }

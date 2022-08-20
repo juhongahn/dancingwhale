@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>이메일 인증 - 춤추는 고래</title>
+
+    <link th:href="@{/css/checkEmailVarification.css}" href="../static/css/checkEmailVerification.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+<main>
+    <div class="text-center">
+        <h2> 춤추는 고래</h2>
+    </div>
+    <div class="px-4 py-5 my-5 text-center">
+        <h3 class="mb-4">이메일 인증이 필요합니다.</h3>
+        <div class="col mx-auto">
+            <p class="mb-4">메일함에서 메일을 확인 바랍니다. 이메일의 '인증하기'를 클릭하면 회원가입이 완료됩니다.</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button type="button" class="btn px-4 veriBtn" onclick="location.href='/login'"
+                        style="background-color: #7952b3; color: white;">로그인 화면으로 돌아가기</button>
+            </div>
+        </div>
+    </div>
+</main>

@@ -37,6 +37,13 @@ public class Member extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
+    private boolean enabled;
+
+    private String resetPasswordToken;
+
     // 회원이 삭제되면 글도 모두 삭제됨.
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> postList = new ArrayList<>();

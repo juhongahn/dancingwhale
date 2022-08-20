@@ -22,7 +22,7 @@ public class PostImg extends BaseEntity{
 
     private String imgUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "post_id")
     private Post post;
 

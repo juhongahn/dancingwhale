@@ -1,5 +1,6 @@
 package com.k1ng.doinggajigaji;
 
+import com.k1ng.doinggajigaji.constant.Role;
 import com.k1ng.doinggajigaji.dto.MemberFormDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.entity.Member;
@@ -23,30 +24,32 @@ public class TestDataInit {
     private final PostService postService;
     private final PasswordEncoder passwordEncoder;
 
-    @PostConstruct
-    public void init() throws Exception {
-        memberService.join(Member.createMember(new MemberFormDto("안주홍", "12345678",
-                "lock5028@naver.com", "scarlet"), passwordEncoder));
-
-
-        String fileName = "testCustomerUpload";
-        String contentType = "xls";
-        String filePath = "src/test/resources/excel/testCustomerUpload.xls";
-
-        for (int i = 0; i < 8; i++) {
-            PostFormDto postFormDto = new PostFormDto();
-            postFormDto.setOnlyMe(true);
-            postFormDto.setId((long) i);
-            postFormDto.setEmail("lock5028@naver.com");
-            postFormDto.setPostImgDtoList(new ArrayList<>());
-            postFormDto.setDescription("test" + i);
-            postFormDto.setPostImgIds(new ArrayList<>());
-
-            List<MultipartFile> multipartFileList = new ArrayList<>();
-
-            postService.savePost(postFormDto, "lock5028@naver.com", multipartFileList);
-        }
-    }
+//    @PostConstruct
+//    public void init() throws Exception {
+//        MemberFormDto adminMemberDto = new MemberFormDto("안주홍", "12345678",
+//                "lock5028@naver.com", "scarlet");
+//        Member adminMember = Member.createMember(adminMemberDto, passwordEncoder);
+//        adminMember.setRole(Role.ADMIN);
+//        memberService.join(adminMember);
+//
+//
+//        String fileName = "testCustomerUpload";
+//        String contentType = "xls";
+//        String filePath = "src/test/resources/excel/testCustomerUpload.xls";
+//
+//        for (int i = 0; i < 8; i++) {
+//            PostFormDto postFormDto = new PostFormDto();
+//            postFormDto.setOnlyMe(true);
+//            postFormDto.setId((long) i);
+//            postFormDto.setPostImgDtoList(new ArrayList<>());
+//            postFormDto.setDescription("test" + i);
+//            postFormDto.setPostImgIds(new ArrayList<>());
+//
+//            List<MultipartFile> multipartFileList = new ArrayList<>();
+//
+//            postService.savePost(postFormDto, "lock5028@naver.com", multipartFileList);
+//        }
+//    }
 
 
 }

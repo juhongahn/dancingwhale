@@ -1,15 +1,15 @@
 package com.k1ng.doinggajigaji.controller;
 
-import com.k1ng.doinggajigaji.argumentresolver.Login;
 import com.k1ng.doinggajigaji.service.LikesService;
-import com.k1ng.doinggajigaji.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 
@@ -21,7 +21,7 @@ public class LikesController {
 
     private final LikesService likesService;
 
-    
+
     // 좋아요 등록
     @ResponseBody
     @PostMapping("/new")

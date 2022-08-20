@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ public class PostFormDto {
     private Long id;
 
     @NotBlank
+    @Length(max = 301, message = "300자를 넘길수 없습니다.")
     private String description;
 
     private List<PostImgDto> postImgDtoList = new ArrayList<>();
@@ -30,8 +31,6 @@ public class PostFormDto {
     private List<Long> postImgIds = new ArrayList<>();
 
     private boolean onlyMe;
-
-    private String email;
 
     private static ModelMapper modelMapper = new ModelMapper();
 
@@ -44,7 +43,6 @@ public class PostFormDto {
         PostFormDto postFormDto = new PostFormDto();
 
         postFormDto.setId(postFormDto.getId());
-        postFormDto.setEmail(post.getMember().getEmail());
         postFormDto.setDescription(post.getDescription());
 
         List<Long> imgIds = post.getPostImgList().stream().map(PostImg::getId).collect(Collectors.toList());

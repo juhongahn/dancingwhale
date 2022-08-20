@@ -43,11 +43,14 @@ public class PostImgService {
         postImgRepository.save(postImg);
     }
 
+
     public void updatePostImg(Long postImgId, MultipartFile postImgFile) throws IOException {
+
         if (!postImgFile.isEmpty()) {
             PostImg savedPostImg = postImgRepository.findById(postImgId)
                     .orElseThrow(EntityNotFoundException::new);
 
+            // 기존 이미지를 삭제
             if (!StringUtils.isEmpty(savedPostImg.getImgName())) {
                 fileService.deleteFile(postImgLocation+"/"+
                         savedPostImg.getImgName());
@@ -58,7 +61,5 @@ public class PostImgService {
             String imgUrl = "/images/post/" + imgName;
             savedPostImg.updatePostImg(oriImgName, imgName, imgUrl);
         }
-
-
     }
 }

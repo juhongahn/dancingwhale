@@ -16,5 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(Member member, Pageable pageable);
 
     // 멤버별 post List
-    List<Post> findAllByMember(Member member);
+    Page<Post> findAllByMemberOrderByRegTimeDesc(Member member, Pageable pageable);
 }

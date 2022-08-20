@@ -18,4 +18,5 @@ public interface PostService {
     Long updatePost(PostFormDto postFormDto, List<MultipartFile> postImgFileList) throws IOException;
     PostFormDto getPostDtl(Long postId);
     void deletePost(Long postId);
+    Page<CardFormDto> getAllPosts(String email, Pageable pageable);
 }

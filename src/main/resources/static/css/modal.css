@@ -1,0 +1,13 @@
+#formFileMultipleLabel{
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #7952b3;
+    color: #ffffff;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    padding: 3px 3px;
+}
+#formFileMultiple{
+    display: none;
+}

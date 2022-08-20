@@ -8,15 +8,18 @@ import com.k1ng.doinggajigaji.entity.Member;
 import com.k1ng.doinggajigaji.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 
 @Slf4j
@@ -30,15 +33,16 @@ public class MemberController {
 
     // 회원가입
     @GetMapping(value = "/new")
-    public String memberForm(Model model){
+    public String memberForm(Model model) {
         model.addAttribute("member", new MemberFormDto());
         return "member/signup";
     }
-    
+
     @PostMapping("/new")
     public String join(@Validated @ModelAttribute("member") MemberFormDto memberFormDto,
-                       BindingResult bindingResult, Model model) {
-        if (memberService.findDuplication(memberFormDto.getEmail())){
+                       BindingResult bindingResult, HttpServletRequest request) {
+
+        if (memberService.findDuplication(memberFormDto.getEmail())) {
             bindingResult.rejectValue("email", "duplicated.email");
             return "member/signup";
         }
@@ -48,14 +52,32 @@ public class MemberController {
         }
 
         Member member = Member.createMember(memberFormDto, passwordEncoder);
-        memberService.join(member);
-        return "redirect:/";
+
+        try {
+            memberService.join(member, getSiteURL(request));
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "checkEmailVerification";
+    }
+
+    @GetMapping("/verify")
+    public String verifyUser(@RequestParam("code") String code) {
+        if (memberService.verify(code)) {
+            return "verify_success";
+        } else {
+            return "verify_fail";
+        }
+    }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
     }
 
     // 프로필 페이지
     @GetMapping("/profile")
     public String profileForm(Principal principal, Model model) {
-        log.info("email={}", principal.getName());
         Member member = memberService.findMemberByEmail(principal.getName());
         model.addAttribute("profile", ProfileDto.of(member));
         return "member/profile";
@@ -78,7 +100,7 @@ public class MemberController {
 
     @PostMapping("/{memberId}/edit")
     public String editProfile(@Validated @ModelAttribute("profile") ProfileEditDto profileEditDto,
-                       BindingResult br, Model model, @PathVariable Long memberId) {
+                              BindingResult br, Model model, @PathVariable Long memberId) {
 
         log.info("ProfileEditDto {}", profileEditDto);
 
@@ -90,7 +112,7 @@ public class MemberController {
         String encodedPassword = memberService.findMemberById(memberId).getPassword();
 
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            br.rejectValue("password","passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
+            br.rejectValue("password", "passwordNotMatch", "계정 비밀번호가 올바르지 않습니다.");
             return "member/editForm";
         }
         try {
@@ -101,7 +123,7 @@ public class MemberController {
         }
         return "redirect:/member/profile";
     }
-    
+
     // 비밀번호 변경
     @GetMapping("/{memberId}/password/edit")
     public String passwordEditForm(@PathVariable Long memberId, Model model) {
@@ -114,8 +136,6 @@ public class MemberController {
     @PostMapping("/{memberId}/password/edit")
     public String editProfile(@Validated @ModelAttribute PasswordChangeDto passwordChangeDto,
                               BindingResult br, Model model, @PathVariable Long memberId) {
-
-        log.info("passwordChangeDto = {}", passwordChangeDto);
 
         if (br.hasErrors()) {
             return "member/passwordEditForm";
@@ -152,13 +172,12 @@ public class MemberController {
     public String deleteMember(@RequestParam String rawPassword, Model model, Principal principal) {
         Member foundMember = memberService.findMemberByEmail(principal.getName());
 
-        if (passwordEncoder.matches(rawPassword, foundMember.getPassword())){
+        if (passwordEncoder.matches(rawPassword, foundMember.getPassword())) {
             memberService.deleteMember(foundMember);
         } else {
             model.addAttribute("errorMessage", "계정 비밀번호가 일치하지 않습니다.");
             return "member/deleteMemberForm";
         }
-
         return "redirect:/login";
     }
 
