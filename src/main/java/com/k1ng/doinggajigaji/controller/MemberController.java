@@ -8,6 +8,7 @@ import com.k1ng.doinggajigaji.entity.Member;
 import com.k1ng.doinggajigaji.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 
@@ -163,17 +165,27 @@ public class MemberController {
         return "redirect:/member/profile";
     }
 
+
+    // 회원탈퇴
     @GetMapping("/delete")
     public String deleteForm() {
         return "member/deleteMemberForm";
     }
 
+
     @PostMapping("/delete")
-    public String deleteMember(@RequestParam String rawPassword, Model model, Principal principal) {
+    public String deleteMember(@RequestParam String rawPassword, Model model, Principal principal,
+                               HttpServletRequest request) {
         Member foundMember = memberService.findMemberByEmail(principal.getName());
 
         if (passwordEncoder.matches(rawPassword, foundMember.getPassword())) {
             memberService.deleteMember(foundMember);
+            // 현재 세션 얻어와서 없애고
+            HttpSession session = request.getSession(false);
+            session.invalidate();
+            // 시큐리티 인증정보 없애기
+
+            SecurityContextHolder.getContext().setAuthentication(null);
         } else {
             model.addAttribute("errorMessage", "계정 비밀번호가 일치하지 않습니다.");
             return "member/deleteMemberForm";

@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>내가 쓴 글 - 춤추는 고래</title>
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 
     <link th:href="@{/css/bootstrap.css}" href="../static/css/bootstrap.css" rel="stylesheet">
     <link th:href="@{/css/general.css}" href="../static/css/general.css" rel="stylesheet">
@@ -33,8 +36,8 @@
         <div th:if="${cards.content.isEmpty()}">
             <div class="card">
                 <div class="card-body text-center">
-                    <h5 class="card-title">아무도 글을 등록하지 않았어요</h5>
-                    <p class="card-text">저에게 여러분의 하루를 알려주세요!</p>
+                    <h5 class="card-title">아직 글을 등록하지 않으셨네요.</h5>
+                    <p class="card-text">저에게 당신의 하루를 알려주세요!</p>
                     <a class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="new"
                        style="cursor: pointer;">글 등록하러 가기</a>
                 </div>
@@ -55,11 +58,6 @@
                        th:postId="${card.postId}"
                        th:email="${card.email}"
                        th:onclick="|requestPostDelete(this.getAttribute('postId'), this.getAttribute('email'))|"></i>
-
-<!--                    <a th:href="@{/post/{postId}/delete(postId=${card.postId})}"-->
-<!--                       onclick="return confirm('삭제하시겠습니까?')">-->
-<!--                        <i class="fas fa-trash-alt"></i>-->
-<!--                    </a>-->
                 </div>
             </div>
 
@@ -69,8 +67,9 @@
                 </div>
             </section>
 
-            <div class="card-body pt-1">
-                <p class="card-text" th:utext="${#strings.replace(card.description, nlString, '&lt;br /&gt;')}"></p>
+            <div class="card-body pt-1 text-box">
+                <p class="card-text mb-2 box-contents" th:utext="${#strings.replace(card.description, nlString, '&lt;br /&gt;')}"></p>
+                <small class="reg-date text-muted" th:text="${#temporals.format(card.regTime, 'yy/MM/dd HH:mm')}"></small>
             </div>
 
             <div class="card-footer text-center px-0 py-2">

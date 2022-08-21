@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -50,22 +49,24 @@ public class PostController {
     @ResponseBody
     @GetMapping("/{postId}/edit")
     public ResponseEntity<PostFormDto> postUpdateForm(@PathVariable Long postId) {
-
+        log.info("postId={}", postId);
         try {
             PostFormDto postFormDto = postService.getPostDtl(postId);
+            log.info("postFormDto={}", postFormDto);
             return new ResponseEntity<>(postFormDto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    //@PreAuthorize("isAuthenticated() and ((@checker(#...)) or hasRole('ADMIN'))")
+    @PreAuthorize("isAuthenticated() and ((@checker.isSelf(#postFormDto.getMemberId())) or hasRole('ADMIN'))")
     @PostMapping("/{postId}/edit")
     @ResponseBody
     public ResponseEntity<Object> postUpdate(@RequestPart(value = "key") PostFormDto postFormDto,
                                               @RequestPart(value = "files", required = false) List<MultipartFile> postImgFileList,
                                               Model model) {
         log.info("postFormDto={}", postFormDto);
+        log.info("memberId={}", postFormDto.getMemberId());
         if (postImgFileList != null )
             postImgFileList.forEach((postImgFile) -> log.info("postImgFile={}", postImgFile));
         else {
@@ -83,7 +84,6 @@ public class PostController {
     }
 
     @ResponseBody
-    @PreAuthorize("isAuthenticated() and (!@checker.isSelf(#deletePostDto.memberId) or hasRole('ADMIN'))")
     @PostMapping("/delete")
     public ResponseEntity<String> deletePost(DeletePostDto deletePostDto) {
         log.info("deletePostDto={}", deletePostDto);

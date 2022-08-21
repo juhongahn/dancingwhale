@@ -13,4 +13,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.verificationCode = ?1")
     public Member findByVerificationCode(String code);
+
+    public Member findByResetPasswordToken(String token);
 }

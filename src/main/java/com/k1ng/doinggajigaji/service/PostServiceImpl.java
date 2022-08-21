@@ -1,5 +1,6 @@
 package com.k1ng.doinggajigaji.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.k1ng.doinggajigaji.dto.CardFormDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.dto.PostImgDto;
@@ -37,6 +38,7 @@ public class PostServiceImpl implements PostService {
     private final PostImgService postImgService;
     private final PostImgRepository postImgRepository;
     private final FileService fileService;
+    private final AmazonS3 amazonS3;
 
     @Value("${upload.postImgLocation}")
     private String postImgLocation;
@@ -51,19 +53,20 @@ public class PostServiceImpl implements PostService {
         post.setMember(member);
         postRepository.save(post);
 
-        
         // ""인 파일이 있다면 제거
         postImgFileList.stream()
                 .filter(multipartFile -> Objects.equals(multipartFile.getOriginalFilename(), ""))
                 .collect(Collectors.toList())
                 .forEach(postImgFileList::remove);
 
+        log.info("postImgFileList={}", postImgFileList);
+
         for (MultipartFile multipartFile : postImgFileList) {
             PostImg postImg = new PostImg();
             postImg.setPost(post);
+            log.info("oriname={}", multipartFile.getOriginalFilename());
             postImgService.savePostImg(postImg, multipartFile);
         }
-
         return post.getId();
     }
 
@@ -178,6 +181,7 @@ public class PostServiceImpl implements PostService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<CardFormDto> getAllPosts(String email, Pageable pageable) {
 
@@ -216,7 +220,6 @@ public class PostServiceImpl implements PostService {
         Page<CardFormDto> cardFormDtoList = postRepository.
                 findAllByOnlyMeFalseOrMemberOrderByRegTimeDesc(member, pageable).map(CardFormDto::of);
 
-
         for (CardFormDto cardFormDto : cardFormDtoList) {
             for (PostImg postImg : postImgList) {
                 if (cardFormDto.getPostId().equals(postImg.getPost().getId())) {
@@ -224,6 +227,7 @@ public class PostServiceImpl implements PostService {
                 }
             }
         }
+        log.info("cardFormDtoList={}", cardFormDtoList.getContent());
         return cardFormDtoList;
     }
 }

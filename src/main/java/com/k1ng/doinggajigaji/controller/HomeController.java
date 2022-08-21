@@ -23,8 +23,7 @@ public class HomeController {
     private final PostService postService;
 
     @GetMapping(value = {"/"})
-    public String homepage(@ModelAttribute("post") PostFormDto postFormDto,
-                           Model model, Principal principal,
+    public String homepage(Model model, Principal principal,
                            @PageableDefault(size = 5) Pageable pageable) {
 
 
@@ -32,6 +31,7 @@ public class HomeController {
         // 작성자, 사진, 글은 post 엔티티에서 가져올 수 있다.
         Page<CardFormDto> allCardForm = postService.getAllCardForm(principal.getName(), pageable);
         String nlString = System.getProperty("line.separator");
+        log.info("cards={}", allCardForm.getContent());
         model.addAttribute("nlString", nlString);
         model.addAttribute("cards", allCardForm);
         return "index";

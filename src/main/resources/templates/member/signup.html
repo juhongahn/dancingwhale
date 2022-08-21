@@ -48,7 +48,7 @@
 
             <div>
                 <label for="password" th:text="#{member.password}">비밀번호</label>
-                <input type="password" th:field="*{password}" class="form-control" id="password">
+                <input type="password" th:field="*{password}" class="form-control" id="password" maxlength="16">
                 <div class="field-error" th:errors="*{password}">
                     비밀번호 오류
                 </div>

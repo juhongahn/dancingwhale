@@ -32,6 +32,8 @@ public class PostFormDto {
 
     private boolean onlyMe;
 
+    private Long memberId;
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Post createPost(){
@@ -52,6 +54,8 @@ public class PostFormDto {
         postFormDto.setPostImgDtoList(imgDtoList);
 
         postFormDto.setOnlyMe(post.isOnlyMe());
+
+        postFormDto.setMemberId(post.getMember().getId());
 
         return postFormDto;
     }

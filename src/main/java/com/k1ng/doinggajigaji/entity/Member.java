@@ -42,6 +42,7 @@ public class Member extends BaseTimeEntity{
 
     private boolean enabled;
 
+    @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
     // 회원이 삭제되면 글도 모두 삭제됨.
@@ -68,6 +69,10 @@ public class Member extends BaseTimeEntity{
 
     public void updatePassword(PasswordChangeDto passwordChangeDto, PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(passwordChangeDto.getConfirmPassword());
+    }
+
+    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(newPassword);
     }
 
 }

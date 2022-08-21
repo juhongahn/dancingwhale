@@ -74,6 +74,7 @@ function formEmptyCheck(_this){
         // 기존에 있던 img와 새로 추가된 이미지를 서버에 보내야한다.
         let onlyMe = $("#onlyMe").is(":checked");
         let postId = $('#postId').val();
+        let memberId = $('#memberId').val();
 
         if (checkDescriptionCnt(description)) {
             alert("300자 이상 넘길 수 없어요.");
@@ -101,9 +102,9 @@ function formEmptyCheck(_this){
             "id"            : postId,
             "onlyMe"            : onlyMe,
             "description"       : description,
-            "postImgIds"        : postImgIds
+            "postImgIds"        : postImgIds,
+            "memberId"          : memberId
         }
-
 
         // 인풋파일은 없을수도 있다.
         const  fileInput = document.querySelector("#formFileMultiple");
@@ -127,7 +128,7 @@ function formEmptyCheck(_this){
             processData: false,
             enctype : 'multipart/form-data',
             success: function(resData) {
-                alert("저장되었습니다.");
+                alert("수정됐습니다.");
                 location.reload();
             }
         });
@@ -191,21 +192,16 @@ function openEditForm(postId, memberId) {
                 $("input:checkbox[id='onlyMe']").prop("checked", data.onlyMe);
                 $('#postId').val(postId);
 
-                if (data.postImgDtoList.length === 1) {
-                    console.log("이미지 파일이 한 개");
-                    var oriImgName = data.postImgDtoList[0].oriImgName;
-                    $('#formFileMultipleLabel').val(oriImgName);
-                } else {
-                    data.postImgDtoList.forEach(function (postImgDto) {
-                        // div에 이미지추가.
-                        var str = '<li class="ui-state-default">';
-                        str += '<img src="'+postImgDto.imgUrl +'" alt="'+ postImgDto.imgName +'" width=80 height=80>';
-                        str += '<span class="delBtn" onclick="delImg(this)">x</span>';
-                        str += '<input type="hidden" class="postImgId" name="postImgId" value = ' + postImgDto.id + '>';
-                        str += '</li>';
-                        $(str).appendTo('#imgPreview');
-                    });
-                }
+
+                data.postImgDtoList.forEach(function (postImgDto) {
+                    // div에 이미지추가.
+                    var str = '<li class="ui-state-default">';
+                    str += '<img src="'+postImgDto.imgUrl +'" alt="'+ postImgDto.imgName +'" width=80 height=80>';
+                    str += '<span class="delBtn" onclick="delImg(this)">x</span>';
+                    str += '<input type="hidden" class="postImgId" name="postImgId" value = ' + postImgDto.id + '>';
+                    str += '</li>';
+                    $(str).appendTo('#imgPreview');
+                });
             }
         );
     var editBtn  = document.getElementById('editFormOpenBtn');

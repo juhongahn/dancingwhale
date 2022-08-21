@@ -61,7 +61,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         helper.setTo(toAddress);
         helper.setSubject(subject);
         content = content.replace("[[name]]", member.getName());
-        String verifyURL = siteURL + "/verify?code=" + member.getVerificationCode();
+        String verifyURL = siteURL +"/member/verify?code=" + member.getVerificationCode();
         content = content.replace("[[URL]]", verifyURL);
         helper.setText(content, true);
         mailSender.send(message);
@@ -132,5 +132,28 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
             throw new UsernameNotFoundException(email);
         }
         return customUserDetails;
+    }
+
+
+
+    public void updateResetPasswordToken(String token, String email) {
+        Member member = memberRepository.findByEmail(email);
+
+        if (member != null) {
+            member.setResetPasswordToken(token);
+            memberRepository.save(member);
+        } else {
+            throw new UsernameNotFoundException("해당 이메일을 가진 사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    public Member getByResetPasswordToken(String token) {
+        return memberRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(Member member, String newPassword, PasswordEncoder passwordEncoder) {
+        member.updatePassword(newPassword, passwordEncoder);
+        member.setResetPasswordToken(null);
+        memberRepository.save(member);
     }
 }

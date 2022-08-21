@@ -17,4 +17,7 @@ public interface MemberService {
     Long updateProfile(Long memberId, ProfileEditDto profileEditDto);
     Long updatePassword(Long memberId, PasswordChangeDto passwordChangeDto, PasswordEncoder passwordEncoder);
     Long deleteMember(Member member);
+    void updateResetPasswordToken(String token, String email);
+    Member getByResetPasswordToken(String token);
+    void updatePassword(Member member, String newPassword, PasswordEncoder passwordEncoder);
 }

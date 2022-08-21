@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,11 +19,13 @@ public class Checker {
     public boolean isSelf(Long memberId) {
         Member member = memberRepository.findById(memberId).
                 orElseThrow(EntityNotFoundException::new);
+
         Authentication authentication = SecurityContextHolder
                 .getContext().getAuthentication();
 
-        User principal = (User) authentication.getPrincipal();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
 
-        return member.getEmail().equals(principal.getPassword());
+
+        return member.getEmail().equals(principal.getUsername());
     }
 }
