@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,15 +58,14 @@ public class PostController {
         }
     }
 
-    @PreAuthorize("isAuthenticated() and ((@checker.isSelf(#postFormDto.getMemberId())) or hasRole('ADMIN'))")
     @PostMapping("/{postId}/edit")
     @ResponseBody
     public ResponseEntity<Object> postUpdate(@RequestPart(value = "key") PostFormDto postFormDto,
-                                              @RequestPart(value = "files", required = false) List<MultipartFile> postImgFileList,
-                                              Model model) {
+                                             @RequestPart(value = "files", required = false) List<MultipartFile> postImgFileList,
+                                             Model model) {
         log.info("postFormDto={}", postFormDto);
         log.info("memberId={}", postFormDto.getMemberId());
-        if (postImgFileList != null )
+        if (postImgFileList != null)
             postImgFileList.forEach((postImgFile) -> log.info("postImgFile={}", postImgFile));
         else {
             log.info("postImgFile = null");
@@ -75,7 +73,7 @@ public class PostController {
 
         try {
             postService.updatePost(postFormDto, postImgFileList);
-        } catch (Exception e){
+        } catch (Exception e) {
             model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
             log.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -98,6 +96,6 @@ public class PostController {
         model.addAttribute("cards", allCardForm);
         String nlString = System.getProperty("line.separator");
         model.addAttribute("nlString", nlString);
-        return "/post/myPosts";
+        return "post/myPosts";
     }
 }

@@ -1,6 +1,5 @@
 package com.k1ng.doinggajigaji.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.k1ng.doinggajigaji.dto.CardFormDto;
 import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.dto.PostImgDto;
@@ -12,7 +11,6 @@ import com.k1ng.doinggajigaji.repository.PostImgRepository;
 import com.k1ng.doinggajigaji.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,11 +35,8 @@ public class PostServiceImpl implements PostService {
     private final MemberRepository memberRepository;
     private final PostImgService postImgService;
     private final PostImgRepository postImgRepository;
-    private final FileService fileService;
-    private final AmazonS3 amazonS3;
+    private final FileServiceS3 fileServiceImpl;
 
-    @Value("${upload.postImgLocation}")
-    private String postImgLocation;
 
     @Override
     public Long savePost(PostFormDto postFormDto, String email, List<MultipartFile> postImgFileList) throws Exception {
@@ -50,7 +45,9 @@ public class PostServiceImpl implements PostService {
         Post post = postFormDto.createPost();
         Member member = memberRepository.findMemberByEmail(email)
                 .orElseThrow(EntityNotFoundException::new);
+
         post.setMember(member);
+
         postRepository.save(post);
 
         // ""인 파일이 있다면 제거
@@ -64,7 +61,6 @@ public class PostServiceImpl implements PostService {
         for (MultipartFile multipartFile : postImgFileList) {
             PostImg postImg = new PostImg();
             postImg.setPost(post);
-            log.info("oriname={}", multipartFile.getOriginalFilename());
             postImgService.savePostImg(postImg, multipartFile);
         }
         return post.getId();
@@ -93,19 +89,18 @@ public class PostServiceImpl implements PostService {
                     .orElseThrow(EntityNotFoundException::new);
 
             postImgRepository.delete(postImg);
-
-            fileService.deleteFile(postImgLocation+"/"+
-                    postImg.getImgName());
+            log.info("삭제되는 이미지 이름={}", postImg.getImgName());
+            fileServiceImpl.deleteFile(postImg.getImgName());
             post.getPostImgList().remove(postImg);
         }
-
         return post.getId();
     }
 
     /**
      * 이미지 업데이트에는 2가지 경우가있다.
-     *  1) 기존에 있던 이미지는 그대로이거나 삭제된 경우,
-     *  2) 새로운 이미지만 추가되는 경우(일부러 이미지를 추가 할 때는 모든 이미지가 날라가게 했다.)
+     * 1) 기존에 있던 이미지는 그대로이거나 삭제된 경우,
+     * 2) 새로운 이미지만 추가되는 경우(일부러 이미지를 추가 할 때는 모든 이미지가 날라가게 했다.)
+     *
      * @param postFormDto
      * @param postImgFileList
      * @return
@@ -121,13 +116,13 @@ public class PostServiceImpl implements PostService {
         post.updatePost(postFormDto);
 
         List<Long> postImgIds = postFormDto.getPostImgIds();
-        log.info("postImgIds={}",  postImgIds.toString());
+        log.info("postImgIds={}", postImgIds.toString());
 
         // 기존 이미지를 삭제했을 때
         if (postImgFileList == null) {
             updatePostIfDeleted(post, postImgIds);
-            
-        // 새로운 이미지를 추가할 때 (기존 이미지들 전부 제거해야함)
+
+            // 새로운 이미지를 추가할 때 (기존 이미지들 전부 제거해야함)
         } else {
             //먼저 db에서 제거후
             postImgRepository.deleteAllByPostId(post.getId());
@@ -136,7 +131,7 @@ public class PostServiceImpl implements PostService {
 
             // 저장소에서 제거
             post.getPostImgList().forEach(postImg ->
-                fileService.deleteFile(postImgLocation+"/"+ postImg.getImgName()));
+                    fileServiceImpl.deleteFile(postImg.getImgName()));
 
             // 새로운 이미지 추가.
             for (MultipartFile multipartFile : postImgFileList) {
@@ -175,8 +170,8 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(EntityNotFoundException::new);
 
         // 이미지도 같이 삭제해준다.
-        post.getPostImgList().forEach(postImg -> fileService
-                .deleteFile(postImgLocation+"/"+ postImg.getImgName()));
+        post.getPostImgList().forEach(postImg -> fileServiceImpl
+                .deleteFile(postImg.getImgName()));
         postRepository.delete(post);
 
     }
@@ -194,8 +189,8 @@ public class PostServiceImpl implements PostService {
         List<PostImg> postImgList = new ArrayList<>();
 
         allPosts.forEach(post -> postImgList
-                        .addAll(postImgRepository.findByPostIdOrderByIdAsc(post.getId()))
-                );
+                .addAll(postImgRepository.findByPostIdOrderByIdAsc(post.getId()))
+        );
 
 
         for (CardFormDto cardFormDto : cardFormDtoList) {

@@ -1,7 +1,6 @@
 package com.k1ng.doinggajigaji.controller;
 
 import com.k1ng.doinggajigaji.dto.CardFormDto;
-import com.k1ng.doinggajigaji.dto.PostFormDto;
 import com.k1ng.doinggajigaji.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
 

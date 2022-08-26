@@ -1,0 +1,44 @@
+
+<!-- 글 작성 모달 -->
+<div class="modal fade" id="exampleModal"
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" th:fragment="modal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLabel">타이틀</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/post/new}" method="post" enctype="multipart/form-data" id="modal-form">
+                    <input type="hidden" name="memberId" id="memberId">
+                    <input type="hidden" name="postId" id="postId">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label for="message-text" class="col-form-label" th:text="#{post.post.content}">내용</label>
+                            <div class="checkbox">
+                                <label>
+                                    나만 보기 <input type="checkbox" name="onlyMe" id="onlyMe">
+                                </label>
+                            </div>
+                        </div>
+                        <textarea type="text" rows="6" cols="60" class="form-control"
+                                  name="description" id="message-text" wrap="hard"></textarea>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <label for="formFileMultiple" id="formFileMultipleLabel" class="form-label">사진 고르기</label>
+                        <input class="form-control" type="file" name="itemImgFiles" accept="image/*" id="formFileMultiple" multiple>
+                    </div>
+                    <ul id="imgPreview" class="sortable d-flex justify-content-start ms-0">
+                    </ul>
+                    <div class="d-flex justify-content-end" >
+                        <button type="button" class="btn confirmBtn me-1"
+                                th:text="#{confirm}" id="postSubmitBtn" onclick="formEmptyCheck(this)">확인</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">취소</button>
+                    </div>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

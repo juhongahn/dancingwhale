@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "member")
 @Getter
 @Setter
-public class Member extends BaseTimeEntity{
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,17 +61,17 @@ public class Member extends BaseTimeEntity{
         return member;
     }
 
-    public void updateProfile(ProfileEditDto profileEditDto){
+    public void updateProfile(ProfileEditDto profileEditDto) {
         this.nickName = profileEditDto.getNickName();
         this.name = profileEditDto.getName();
         this.setUpdateTime(LocalDateTime.now());
     }
 
-    public void updatePassword(PasswordChangeDto passwordChangeDto, PasswordEncoder passwordEncoder){
+    public void updatePassword(PasswordChangeDto passwordChangeDto, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(passwordChangeDto.getConfirmPassword());
     }
 
-    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder){
+    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(newPassword);
     }
 

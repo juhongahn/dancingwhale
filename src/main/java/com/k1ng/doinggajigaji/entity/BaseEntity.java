@@ -1,7 +1,6 @@
 package com.k1ng.doinggajigaji.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,7 +13,7 @@ import javax.persistence.MappedSuperclass;
 @EntityListeners(value = {AuditingEntityListener.class})
 @MappedSuperclass
 @Getter
-public class BaseEntity extends BaseTimeEntity{
+public class BaseEntity extends BaseTimeEntity {
 
     @CreatedBy
     @Column(updatable = false)

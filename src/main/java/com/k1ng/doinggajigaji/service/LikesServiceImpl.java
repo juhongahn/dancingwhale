@@ -3,16 +3,15 @@ package com.k1ng.doinggajigaji.service;
 
 import com.k1ng.doinggajigaji.entity.Likes;
 import com.k1ng.doinggajigaji.entity.Member;
+import com.k1ng.doinggajigaji.entity.Post;
 import com.k1ng.doinggajigaji.repository.LikesRepository;
 import com.k1ng.doinggajigaji.repository.MemberRepository;
-import com.k1ng.doinggajigaji.entity.Post;
 import com.k1ng.doinggajigaji.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

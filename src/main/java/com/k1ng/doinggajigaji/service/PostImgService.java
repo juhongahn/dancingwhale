@@ -3,7 +3,7 @@ package com.k1ng.doinggajigaji.service;
 import com.k1ng.doinggajigaji.entity.PostImg;
 import com.k1ng.doinggajigaji.repository.PostImgRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,35 +11,35 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostImgService {
 
-    @Value("${upload.postImgLocation}")
-    private String postImgLocation;
-
     private final PostImgRepository postImgRepository;
-    
-    private final FileService fileService;
+
+    private final FileServiceS3 fileServiceImpl;
 
     public void savePostImg(PostImg postImg, MultipartFile postImgFile) throws IOException {
-        
+
+        UUID uuid = UUID.randomUUID();
+
         // 원본 이름
         String oriImgName = postImgFile.getOriginalFilename();
-        String imgName = "";
         String imgUrl = "";
+
+        // 확장자 추출 & 저장할 파일 이름 만들기.
+        String extension = oriImgName.substring(oriImgName.lastIndexOf("."));
+        String savedFileName = uuid.toString() + extension;
 
         // 파일 업로드
         if (!StringUtils.isEmpty(oriImgName)) {
-            imgName = fileService.uploadFile(postImgLocation, oriImgName,
-                    postImgFile.getBytes());
-
-            imgUrl = "/images/post/" + imgName;
+            imgUrl = fileServiceImpl.uploadFile(postImgFile, savedFileName);
         }
-
-        postImg.updatePostImg(oriImgName, imgName, imgUrl);
+        postImg.updatePostImg(oriImgName, savedFileName, imgUrl);
         postImgRepository.save(postImg);
     }
 
@@ -52,14 +52,11 @@ public class PostImgService {
 
             // 기존 이미지를 삭제
             if (!StringUtils.isEmpty(savedPostImg.getImgName())) {
-                fileService.deleteFile(postImgLocation+"/"+
-                        savedPostImg.getImgName());
+                fileServiceImpl.deleteFile(savedPostImg.getImgName());
             }
-
             String oriImgName = postImgFile.getOriginalFilename();
-            String imgName = fileService.uploadFile(postImgLocation, oriImgName, postImgFile.getBytes());
-            String imgUrl = "/images/post/" + imgName;
-            savedPostImg.updatePostImg(oriImgName, imgName, imgUrl);
+            String imgName = fileServiceImpl.uploadFile(postImgFile, oriImgName);
+            savedPostImg.updatePostImg(oriImgName, imgName, imgName);
         }
     }
 }

@@ -36,7 +36,7 @@ public class PostFormDto {
 
     private static ModelMapper modelMapper = new ModelMapper();
 
-    public Post createPost(){
+    public Post createPost() {
         return modelMapper.map(this, Post.class);
     }
 

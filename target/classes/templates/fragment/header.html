@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-5" th:fragment="header">
+        <div class="container d-flex justify-content-between">
+            <div>
+                <a class="navbar-brand" th:href="@{'/'}" th:text="|춤추는 고래|"></a>
+            </div>
+            <div class="header-icons d-flex align-content-center">
+                <a data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="new"
+                style="cursor: pointer;">
+                    <i class="fas fa-pen"></i>
+                </a>
+
+                <div class="dropdown d-flex align-content-center">
+                    <a  role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <ul class="dropdown-menu p-0 m-0" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item p-0 w-auto" th:href="@{/member/profile}">프로필</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item p-0 w-auto" th:href="@{/logout}">로그아웃</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </nav>
+</body>
+</html>

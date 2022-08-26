@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 public class Utility {
-    public static String getSiteURL(HttpServletRequest request){
+    public static String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         log.info("siteURL={}", siteURL);
         // 컨텍스트 패스를 읽어온다.

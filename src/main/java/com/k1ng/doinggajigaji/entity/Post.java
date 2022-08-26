@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Post extends BaseEntity{
+public class Post extends BaseEntity {
 
     @Id
     @Column(name = "post_id")

@@ -1,3 +1,5 @@
+
+
 # Datasource 소스
 spring:
   mail:
@@ -42,6 +44,7 @@ server:
     session:
       timeout: 1800
       tracking-modes: cookie
+  port: 5000
 logging:
   level:
     org:
@@ -52,9 +55,9 @@ logging:
 
 # 상품 이미지 업로드 경로
 
-upload:
-  postImgLocation: C:/doinggajigaji/post
-  uploadPath: file:///C:/doinggajigaji/
+#upload:
+#  postImgLocation: C:/doinggajigaji/post
+#  uploadPath: file:///C:/doinggajigaji/post
 # 리소스 업로드 경로
 
 secretKey:

@@ -1,7 +1,6 @@
 package com.k1ng.doinggajigaji.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
@@ -32,8 +31,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             errorMsg = "없는 이메일이거나 비밀번호가 일치하지 않습니다.";
             log.info("BadCredentialsException={}", errorMsg);
 
-        }
-        else if (exception instanceof DisabledException) {
+        } else if (exception instanceof DisabledException) {
             errorMsg = "이메일 인증을 완료해 주세요.";
             log.info("DisabledException={}", errorMsg);
         }

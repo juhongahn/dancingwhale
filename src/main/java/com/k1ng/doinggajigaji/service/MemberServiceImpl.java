@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -61,7 +60,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         helper.setTo(toAddress);
         helper.setSubject(subject);
         content = content.replace("[[name]]", member.getName());
-        String verifyURL = siteURL +"/member/verify?code=" + member.getVerificationCode();
+        String verifyURL = siteURL + "/member/verify?code=" + member.getVerificationCode();
         content = content.replace("[[URL]]", verifyURL);
         helper.setText(content, true);
         mailSender.send(message);
@@ -89,7 +88,7 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
 
     @Override
     public Member findMemberByEmail(String email) {
-        
+
         // 찾고 없을 땐 null을 반환.
         return memberRepository.findMemberByEmail(email).orElse(null);
     }
@@ -133,7 +132,6 @@ public class MemberServiceImpl implements UserDetailsService, MemberService {
         }
         return customUserDetails;
     }
-
 
 
     public void updateResetPasswordToken(String token, String email) {
